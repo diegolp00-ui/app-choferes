@@ -1,4 +1,4 @@
-﻿/**
+/**
  * PORTAL DE CAPACITACIÓN & SOPORTE OPERATIVO PARA CHÓFERES
  * Lógica de Negocio, Simulador Móvil, Evaluaciones y Directorios
  */
@@ -25,7 +25,7 @@ const AppState = {
       name: "Juan Carlos Morales",
       role: "Monitor Líder de Ruta",
       zone: "huachipa",
-      zoneLabel: "CD Huachipa & CD Mosquera",
+      zoneLabel: "CD Huachipa",
       phone: "987654321",
       schedule: "06:00 - 15:00",
       status: "En Línea",
@@ -940,7 +940,7 @@ function shareEvalByWhatsApp() {
 🔧 *Checklist Vehicular:* Conforme
 📝 *Novedades:* ${incidents}
 
-_Enviado desde el Portal de Choferes - CD Mosquera & Huachipa_`;
+_Enviado desde el Portal de Capacitación para Chóferes - CD Huachipa_`;
 
   const waUrl = `https://wa.me/51987654321?text=${encodeURIComponent(message)}`;
   window.open(waUrl, "_blank");
