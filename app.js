@@ -153,6 +153,7 @@ function openModule(moduleId, pushHistory = true) {
     }
 
     // Actualizar cabecera roja al modo submódulo (estilo Bitácora de Ruta)
+    const appHeader = document.getElementById("appHeader");
     const homeHeader = document.getElementById("headerHomeContent");
     const modHeader = document.getElementById("headerModuleContent");
     const titleEl = document.getElementById("moduleHeaderTitle");
@@ -161,6 +162,16 @@ function openModule(moduleId, pushHistory = true) {
     const meta = MODULE_HEADERS[moduleId] || { title: "Shalom Operaciones", subtitle: "Portal del Chofer" };
     if (titleEl) titleEl.textContent = meta.title;
     if (subEl) subEl.textContent = meta.subtitle;
+
+    if (appHeader) {
+      if (moduleId === "practicaApp") {
+        appHeader.style.borderRadius = "0";
+        appHeader.style.padding = "13px 16px";
+      } else {
+        appHeader.style.borderRadius = "";
+        appHeader.style.padding = "";
+      }
+    }
 
     if (homeHeader && modHeader) {
       homeHeader.classList.add("hidden");
@@ -178,12 +189,18 @@ function openModule(moduleId, pushHistory = true) {
       document.getElementById("evalTruckPlate").value = AppState.activeDriver.plate;
       renderEvaluationHistory();
       setTimeout(() => resizeCanvas(evalCanvas, evalCtx), 40);
-    } else if (moduleId === "practicaApp") {
-      setTimeout(() => resizeCanvas(simCanvas, simCtx), 40);
     } else if (moduleId === "bitacoraRuta") {
       renderBitacoraHistory();
     }
   });
+}
+
+function reloadEmbeddedSimulator() {
+  const iframe = document.getElementById("officialSimulatorIframe");
+  if (iframe && iframe.contentWindow) {
+    iframe.contentWindow.location.reload();
+    showToast("↻ Simulador reiniciado");
+  }
 }
 
 function showDashboard(pushHistory = true) {
@@ -194,6 +211,12 @@ function showDashboard(pushHistory = true) {
 
     const dash = document.getElementById("viewDashboard");
     if (dash) dash.classList.add("active");
+
+    const appHeader = document.getElementById("appHeader");
+    if (appHeader) {
+      appHeader.style.borderRadius = "";
+      appHeader.style.padding = "";
+    }
 
     const homeHeader = document.getElementById("headerHomeContent");
     const modHeader = document.getElementById("headerModuleContent");

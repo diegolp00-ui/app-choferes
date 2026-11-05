@@ -1,7 +1,8 @@
-const CACHE_NAME = "portal-choferes-v3-60fps";
+const CACHE_NAME = "portal-choferes-v4-sim";
 const ASSETS = [
   "./",
   "./index.html",
+  "./simulador.html",
   "./styles.css",
   "./agencies_data.js",
   "./app.js",
