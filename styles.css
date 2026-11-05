@@ -1,22 +1,30 @@
 /* ==========================================================================
-   PORTAL DE CAPACITACIÓN & SOPORTE OPERATIVO PARA CHÓFERES
-   Inspirado en la identidad corporativa: Acentos Carmesí/Rosa, fondos limpios
+   SHALOM OPERACIONES - PORTAL DEL CHOFER
+   Diseño Ligero Mobile-First • Optimizado a 60 FPS (GPU Hardware Accelerated)
    ========================================================================== */
 
 :root {
-  --primary-red: #e11d48;
-  --primary-dark: #be123c;
-  --primary-light: #fff1f2;
-  --primary-border: #fecdd3;
-  --accent-text: #9f1239;
-  --bg-main: #f8fafc;
-  --card-bg: #ffffff;
-  --text-main: #1e293b;
-  --text-muted: #64748b;
-  --border-light: #e2e8f0;
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-card: 0 4px 6px -1px rgb(0 0 0 / 0.06), 0 2px 4px -2px rgb(0 0 0 / 0.05);
-  --shadow-hover: 0 10px 15px -3px rgb(225 29 72 / 0.12), 0 4px 6px -4px rgb(225 29 72 / 0.08);
+  --shalom-red: #d32f2f;
+  --shalom-red-dark: #b71c1c;
+  --shalom-red-soft: #fef2f2;
+  --shalom-navy: #1b2434;
+  --shalom-navy-light: #26334a;
+  --bg-app: #f1f5f9;
+  --bg-card: #ffffff;
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --text-muted: #94a3b8;
+  --border-color: #e2e8f0;
+  --blue-info-bg: #eff6ff;
+  --blue-info-border: #2563eb;
+  --blue-info-text: #1e3a8a;
+  --emerald: #10b981;
+  --shadow-header: 0 6px 20px -2px rgba(183, 28, 28, 0.25);
+  --shadow-card: 0 4px 16px -2px rgba(15, 23, 42, 0.05), 0 2px 6px -1px rgba(15, 23, 42, 0.03);
+  --shadow-navy: 0 10px 22px -4px rgba(27, 36, 52, 0.28);
+  --radius-header: 26px;
+  --radius-card: 22px;
+  --radius-btn: 16px;
 }
 
 * {
@@ -26,317 +34,673 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  background-color: var(--bg-main);
-  color: var(--text-main);
-  line-height: 1.5;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, "Helvetica Neue", Arial, sans-serif;
+  background-color: #e2e8f0;
+  color: var(--text-primary);
+  line-height: 1.45;
   min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Barra superior roja corporativa idéntica a la imagen */
-.top-accent-bar {
-  height: 6px;
-  background: linear-gradient(90deg, #be123c 0%, #e11d48 50%, #f43f5e 100%);
+/* Contenedor App Shell (Móvil nativo y centrado limpio en Desktop) */
+.app-shell {
   width: 100%;
-}
-
-/* Tarjetas principales estilo captura */
-.dashboard-card {
-  background: var(--card-bg);
-  border: 1px solid #e2e8f0;
-  border-radius: 1.25rem;
-  padding: 1.75rem 1.5rem;
+  max-width: 480px;
+  min-height: 100vh;
+  margin: 0 auto;
+  background-color: var(--bg-app);
+  position: relative;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 0 40px rgba(15, 23, 42, 0.08);
 }
 
-.dashboard-card:hover {
-  transform: translateY(-3px);
-  border-color: var(--primary-border);
-  box-shadow: var(--shadow-hover);
-}
-
-.dashboard-card:active {
-  transform: translateY(-1px);
-}
-
-/* Iconos redondeados en fondo rosado suave */
-.icon-badge {
-  width: 3.5rem;
-  height: 3.5rem;
-  border-radius: 1rem;
-  background-color: var(--primary-light);
-  color: var(--primary-red);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 1rem;
-  transition: transform 0.2s ease, background-color 0.2s ease;
-}
-
-.dashboard-card:hover .icon-badge {
-  transform: scale(1.08);
-  background-color: #ffe4e6;
-}
-
-.dashboard-card h3 {
-  font-size: 1.15rem;
-  font-weight: 700;
-  color: var(--text-main);
-  margin-bottom: 0.35rem;
-  line-height: 1.25;
-}
-
-.dashboard-card p {
-  font-size: 0.875rem;
-  color: var(--text-muted);
-  line-height: 1.35;
-}
-
-/* Cuadro de perfil de usuario según imagen */
-.user-profile-box {
-  background-color: rgba(255, 241, 242, 0.65);
-  border: 1px solid var(--primary-border);
-  border-radius: 1rem;
-  padding: 0.85rem 1.25rem;
+/* ==========================================================================
+   CABECERA ROJA CORPORATIVA (IDÉNTICA A CAPTURAS)
+   ========================================================================== */
+.app-header {
+  background: linear-gradient(145deg, #d62828 0%, #c62828 100%);
+  color: #ffffff;
+  padding: 22px 22px 24px;
+  border-bottom-left-radius: var(--radius-header);
+  border-bottom-right-radius: var(--radius-header);
+  box-shadow: var(--shadow-header);
+  position: sticky;
+  top: 0;
+  z-index: 40;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 1.75rem;
+  gap: 12px;
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
 }
 
-.user-badge-left {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  font-weight: 700;
-  color: var(--accent-text);
-  font-size: 1.05rem;
+.header-title {
+  font-size: 1.32rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: #ffffff;
 }
 
-.user-links-right {
-  display: flex;
-  align-items: center;
-  gap: 1.25rem;
-  font-size: 0.9rem;
-  font-weight: 600;
+.header-subtitle {
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.88);
+  margin-top: 2px;
 }
 
-.user-links-right a,
-.user-links-right button {
-  color: #0284c7;
-  text-decoration: underline;
-  background: none;
+.avatar-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #ffffff;
+  color: var(--shalom-red);
+  font-weight: 800;
+  font-size: 0.95rem;
   border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  font-size: inherit;
-  font-family: inherit;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  touch-action: manipulation;
+  transition: transform 0.15s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.user-links-right a:hover,
-.user-links-right button:hover {
-  color: #0369a1;
+.avatar-btn:active {
+  transform: scale3d(0.92, 0.92, 1);
 }
 
-/* Vistas y Modales */
+.header-back-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  touch-action: manipulation;
+  transition: transform 0.15s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.15s ease;
+}
+
+.header-back-btn:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.header-back-btn:active {
+  transform: scale3d(0.9, 0.9, 1);
+}
+
+/* ==========================================================================
+   CUERPO Y PANELES DE VISTA A 60 FPS
+   ========================================================================== */
+.app-body {
+  padding: 20px 18px 32px;
+  flex: 1;
+}
+
 .view-panel {
   display: none;
-  animation: fadeIn 0.25s ease-out;
+  opacity: 0;
+  transform: translate3d(0, 6px, 0);
+  will-change: transform, opacity;
 }
 
 .view-panel.active {
   display: block;
+  animation: viewEnter60fps 0.18s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
-@keyframes fadeIn {
+@keyframes viewEnter60fps {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translate3d(0, 8px, 0);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translate3d(0, 0, 0);
   }
 }
 
-/* Botón Volver estilizado */
-.btn-back {
+/* ==========================================================================
+   HOME: TARJETA CENTRAL Y SOPORTE EN RUTA (NAVY)
+   ========================================================================== */
+.hero-support-card {
+  background: var(--shalom-navy);
+  color: #ffffff;
+  border-radius: 20px;
+  border-left: 6px solid var(--shalom-red);
+  padding: 20px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  box-shadow: var(--shadow-navy);
+  cursor: pointer;
+  touch-action: manipulation;
+  transform: translate3d(0, 0, 0);
+  transition: transform 0.16s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hero-support-card:active {
+  transform: scale3d(0.975, 0.975, 1);
+}
+
+.hero-support-title {
+  font-size: 1.12rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: #ffffff;
+}
+
+.hero-support-desc {
+  font-size: 0.84rem;
+  color: #cbd5e1;
+  margin-top: 5px;
+  line-height: 1.35;
+}
+
+.hero-support-icon {
+  color: #ef4444;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ==========================================================================
+   HOME: SECCIONES Y CUADRÍCULA 2x2 DE MÓDULOS
+   ========================================================================== */
+.section-label {
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  margin: 24px 0 12px 4px;
+}
+
+.modules-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.module-tile {
+  background: var(--bg-card);
+  border-radius: var(--radius-card);
+  padding: 22px 14px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  box-shadow: var(--shadow-card);
+  border: 1px solid rgba(226, 232, 240, 0.7);
+  cursor: pointer;
+  touch-action: manipulation;
+  transform: translate3d(0, 0, 0);
+  transition: transform 0.16s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.16s ease;
+}
+
+.module-tile:hover {
+  border-color: #fecaca;
+}
+
+.module-tile:active {
+  transform: scale3d(0.96, 0.96, 1);
+}
+
+.module-tile-icon {
+  color: var(--shalom-red);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.module-tile-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.25;
+}
+
+/* ==========================================================================
+   HOME: AVISOS DEL ÁREA
+   ========================================================================== */
+.notice-card {
+  background: var(--bg-card);
+  border-radius: 18px;
+  border-left: 5px solid var(--shalom-navy);
+  padding: 16px 18px;
+  box-shadow: var(--shadow-card);
+  font-size: 0.88rem;
+  color: #475569;
+  line-height: 1.45;
+}
+
+.notice-card strong {
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   BITÁCORA DE RUTA (REPORTE DE RUTAS - IDÉNTICA A CAPTURA)
+   ========================================================================== */
+.white-panel-card {
+  background: var(--bg-card);
+  border-radius: 26px;
+  padding: 22px 20px;
+  box-shadow: var(--shadow-card);
+  border: 1px solid rgba(226, 232, 240, 0.6);
+}
+
+.confidential-box {
+  background-color: var(--blue-info-bg);
+  border-left: 5px solid var(--blue-info-border);
+  border-radius: 14px;
+  padding: 16px 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+.confidential-icon {
+  color: #1d4ed8;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.confidential-text {
+  font-size: 0.875rem;
+  color: var(--blue-info-text);
+  line-height: 1.45;
+}
+
+.confidential-text strong {
+  font-weight: 700;
+  color: #1e3a8a;
+}
+
+.form-group {
+  margin-bottom: 18px;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.form-select,
+.form-input,
+.form-textarea {
+  width: 100%;
+  font-family: inherit;
+  font-size: 0.94rem;
+  color: var(--text-primary);
+  background-color: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 14px;
+  padding: 13px 15px;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.form-select {
+  border-color: #b45353;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23334155' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 40px;
+}
+
+.form-select:focus,
+.form-input:focus,
+.form-textarea:focus {
+  border-color: var(--shalom-red);
+  box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.12);
+}
+
+.form-textarea {
+  min-height: 128px;
+  resize: vertical;
+  line-height: 1.45;
+}
+
+.form-textarea::placeholder,
+.form-input::placeholder {
+  color: #94a3b8;
+}
+
+.btn-primary-red {
+  width: 100%;
+  background: var(--shalom-red);
+  color: #ffffff;
+  border: none;
+  border-radius: var(--radius-btn);
+  padding: 15px 20px;
+  font-size: 1rem;
+  font-weight: 700;
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  color: var(--primary-red);
-  background-color: var(--primary-light);
-  border: 1px solid var(--primary-border);
-  padding: 0.5rem 1rem;
-  border-radius: 0.75rem;
-  font-weight: 600;
-  font-size: 0.9rem;
+  justify-content: center;
+  gap: 10px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  box-shadow: 0 6px 16px -2px rgba(211, 47, 47, 0.35);
+  touch-action: manipulation;
+  transform: translate3d(0, 0, 0);
+  transition: transform 0.15s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.15s ease;
 }
 
-.btn-back:hover {
-  background-color: #ffe4e6;
-  color: var(--primary-dark);
+.btn-primary-red:hover {
+  background: var(--shalom-red-dark);
 }
 
-/* Simulador de Teléfono Celular del Chofer */
+.btn-primary-red:active {
+  transform: scale3d(0.97, 0.97, 1);
+}
+
+/* ==========================================================================
+   COMPONENTES DE MÓDULOS INTERNOS (TABS, AGENCIAS, SIMULADOR, MONITORES)
+   ========================================================================== */
+.pill-tabs {
+  display: flex;
+  background: #e2e8f0;
+  padding: 4px;
+  border-radius: 14px;
+  margin-bottom: 18px;
+  gap: 4px;
+}
+
+.pill-tab-btn {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: #475569;
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 10px 8px;
+  border-radius: 11px;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.pill-tab-btn.active {
+  background: #ffffff;
+  color: var(--shalom-red);
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
+}
+
+/* Tarjetas de lista optimizadas para scroll a 60 FPS */
+.fast-card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 16px;
+  border: 1px solid #e2e8f0;
+  box-shadow: var(--shadow-card);
+  margin-bottom: 12px;
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 160px;
+}
+
+.fast-card.hub-highlight {
+  border-color: #fca5a5;
+  background: linear-gradient(to bottom, #fff5f5 0%, #ffffff 35%);
+}
+
+/* Chips de zonas */
+.zone-chips-scroll {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.zone-chips-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.zone-chip {
+  flex-shrink: 0;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #475569;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 7px 13px;
+  border-radius: 999px;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.zone-chip.active {
+  background: var(--shalom-red);
+  color: #ffffff;
+  border-color: var(--shalom-red);
+}
+
+/* Botones de contacto rápido */
+.action-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.btn-wa {
+  flex: 1;
+  background: #16a34a;
+  color: #ffffff;
+  text-decoration: none;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.btn-wa:active,
+.btn-call:active,
+.btn-gps:active {
+  transform: scale3d(0.96, 0.96, 1);
+}
+
+.btn-call {
+  background: #0284c7;
+  color: #ffffff;
+  text-decoration: none;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.btn-gps {
+  flex: 1;
+  text-decoration: none;
+  border-radius: 12px;
+  padding: 9px 12px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  touch-action: manipulation;
+}
+
+.btn-gps-maps {
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+}
+
+.btn-gps-waze {
+  background: #ecfeff;
+  color: #0e7490;
+  border: 1px solid #a5f3fc;
+}
+
+/* Simulador de teléfono embebido */
 .phone-simulator-frame {
-  max-width: 410px;
-  margin: 0 auto;
-  background: #111827;
-  border-radius: 40px;
-  padding: 12px;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
-  border: 4px solid #374151;
+  background: #0f172a;
+  border-radius: 34px;
+  padding: 10px;
+  box-shadow: 0 20px 35px -10px rgba(15, 23, 42, 0.3);
+  border: 3px solid #334155;
 }
 
 .phone-simulator-screen {
-  background: #f3f4f6;
-  border-radius: 32px;
+  background: #f8fafc;
+  border-radius: 26px;
   overflow: hidden;
-  height: 640px;
+  min-height: 510px;
   display: flex;
   flex-direction: column;
-  position: relative;
 }
 
 .phone-notch {
-  height: 24px;
-  background: #111827;
-  width: 140px;
-  margin: 0 auto;
-  border-bottom-left-radius: 12px;
-  border-bottom-right-radius: 12px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.phone-notch-camera {
-  width: 8px;
-  height: 8px;
-  background: #374151;
-  border-radius: 50%;
+  height: 18px;
+  background: #0f172a;
+  width: 110px;
+  margin: 0 auto 4px;
+  border-radius: 999px;
 }
 
 .phone-header {
-  background: #1e293b;
-  color: #fff;
-  padding: 0.75rem 1rem;
+  background: var(--shalom-navy);
+  color: #ffffff;
+  padding: 10px 14px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 0.85rem;
-  font-weight: 600;
+  font-size: 0.8rem;
+  font-weight: 700;
 }
 
 .phone-content {
   flex: 1;
-  overflow-y: auto;
-  padding: 1rem;
+  padding: 14px;
   display: flex;
   flex-direction: column;
+  gap: 10px;
 }
 
-/* Firma digital en Canvas */
 .signature-canvas {
   background-color: #ffffff;
   border: 2px dashed #cbd5e1;
-  border-radius: 0.75rem;
+  border-radius: 12px;
   cursor: crosshair;
   touch-action: none;
   width: 100%;
-  height: 140px;
+  height: 130px;
+  display: block;
 }
 
-/* Botones de acción rápida WhatsApp */
-.btn-whatsapp {
-  background-color: #25d366;
-  color: white;
-  border: none;
-  border-radius: 0.75rem;
-  padding: 0.6rem 1rem;
-  font-weight: 600;
-  display: inline-flex;
+/* Modal ligero */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  z-index: 100;
+  display: flex;
   align-items: center;
-  gap: 0.5rem;
-  text-decoration: none;
-  font-size: 0.875rem;
-  transition: background-color 0.2s;
+  justify-content: center;
+  padding: 16px;
+  opacity: 1;
+  transition: opacity 0.15s ease;
 }
 
-.btn-whatsapp:hover {
-  background-color: #20ba59;
-  color: white;
+.modal-backdrop.hidden {
+  display: none !important;
 }
 
-.btn-call {
-  background-color: #0284c7;
-  color: white;
-  border: none;
-  border-radius: 0.75rem;
-  padding: 0.6rem 1rem;
-  font-weight: 600;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  text-decoration: none;
-  font-size: 0.875rem;
-  transition: background-color 0.2s;
-}
-
-.btn-call:hover {
-  background-color: #0369a1;
-  color: white;
-}
-
-/* Tarjetas de Organigrama */
-.org-node {
+.modal-card {
   background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-top: 4px solid var(--primary-red);
-  border-radius: 0.75rem;
-  padding: 1rem;
-  box-shadow: var(--shadow-sm);
-  transition: transform 0.2s ease;
+  border-radius: 24px;
+  width: 100%;
+  max-width: 420px;
+  padding: 22px 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
 }
 
-.org-node:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-card);
+/* Toast Flotante 60fps */
+.app-toast {
+  position: fixed;
+  bottom: 22px;
+  left: 50%;
+  transform: translate3d(-50%, 100px, 0);
+  background: #0f172a;
+  color: #ffffff;
+  padding: 12px 18px;
+  border-radius: 999px;
+  font-size: 0.84rem;
+  font-weight: 600;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+  z-index: 200;
+  pointer-events: none;
+  opacity: 0;
+  transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.22s ease;
+  white-space: nowrap;
 }
 
-/* Custom scrollbars */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-::-webkit-scrollbar-track {
-  background: #f1f5f9;
-}
-::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 3px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+.app-toast.show {
+  transform: translate3d(-50%, 0, 0);
+  opacity: 1;
 }
 
-/* Impresión */
-@media print {
-  .no-print {
-    display: none !important;
-  }
-  .print-only {
-    display: block !important;
-  }
+/* Utilidades rápidas */
+.hidden {
+  display: none !important;
 }
+.flex { display: flex; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.gap-2 { gap: 8px; }
+.gap-3 { gap: 12px; }
+.mt-2 { margin-top: 8px; }
+.mt-3 { margin-top: 12px; }
+.mt-4 { margin-top: 16px; }
+.mb-2 { margin-bottom: 8px; }
+.mb-3 { margin-bottom: 12px; }
+.mb-4 { margin-bottom: 16px; }
+.text-xs { font-size: 0.76rem; }
+.text-sm { font-size: 0.86rem; }
+.font-bold { font-weight: 700; }
+.w-full { width: 100%; }

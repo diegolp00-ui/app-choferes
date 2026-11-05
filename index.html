@@ -2,1047 +2,669 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Portal de Capacitación para Chóferes - CD Huachipa</title>
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <!-- Custom Styles -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Shalom Operaciones - Portal del Chofer</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#e11d48">
+  <meta name="theme-color" content="#c62828">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 </head>
-<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col">
+<body>
 
-  <!-- Barra superior roja corporativa idéntica a la imagen de referencia -->
-  <div class="top-accent-bar fixed top-0 left-0 right-0 z-50"></div>
+  <!-- CONTENEDOR PRINCIPAL MOBILE-FIRST (60 FPS) -->
+  <div class="app-shell">
 
-  <!-- Contenedor Principal -->
-  <div class="max-w-4xl mx-auto px-4 pt-6 pb-12 flex-1 w-full">
-
-    <!-- Tarjeta de Usuario idéntica a la imagen -->
-    <header class="user-profile-box shadow-sm mb-6">
-      <div class="user-badge-left">
-        <div class="w-8 h-8 rounded-full bg-rose-100 flex items-center justify-center text-rose-600">
-          <i data-lucide="user" class="w-5 h-5"></i>
+    <!-- ===================================================================== -->
+    <!-- CABECERA DINÁMICA ROJA (CAMBIA ENTRE HOME Y SUBMÓDULOS SIN REFLUJO)    -->
+    <!-- ===================================================================== -->
+    <header id="appHeader" class="app-header">
+      <!-- Estado Home: Shalom Operaciones + Avatar DL -->
+      <div id="headerHomeContent" class="flex items-center justify-between w-full">
+        <div>
+          <h1 class="header-title">Shalom Operaciones</h1>
+          <p class="header-subtitle" id="headerSubtitleDriver">Portal del Chofer</p>
         </div>
-        <span id="headerUserName">Diego Lizarbe</span>
-        <span class="text-xs px-2 py-0.5 rounded-full bg-rose-100 text-rose-700 font-medium hidden sm:inline">Capacitador / Chofer</span>
+        <button id="headerAvatarBtn" onclick="openDniModal()" class="avatar-btn" title="Cambiar o gestionar chofer activo" aria-label="Perfil de Chofer">
+          DL
+        </button>
       </div>
-      <div class="user-links-right">
-        <button onclick="openDniModal()" class="hover:underline flex items-center gap-1">
-          <i data-lucide="id-card" class="w-4 h-4"></i>
-          Gestionar DNIs
+
+      <!-- Estado Submódulo: Flecha Atrás + Título + Subtítulo (Idéntico a Bitácora de Ruta) -->
+      <div id="headerModuleContent" class="flex items-center gap-3 w-full hidden">
+        <button onclick="showDashboard()" class="header-back-btn" aria-label="Volver al inicio">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 12H5"/>
+            <path d="m12 19-7-7 7-7"/>
+          </svg>
         </button>
-        <button onclick="logoutPrompt()" class="hover:underline text-rose-600 flex items-center gap-1">
-          <i data-lucide="log-out" class="w-4 h-4"></i>
-          Salir
-        </button>
+        <div>
+          <h1 id="moduleHeaderTitle" class="header-title">Bitácora de Ruta</h1>
+          <p id="moduleHeaderSubtitle" class="header-subtitle">Reporta incidencias del día a día</p>
+        </div>
       </div>
     </header>
 
-    <!-- Subtítulo / Contexto de Capacitación -->
-    <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-slate-200 pb-4">
-      <div>
-        <h1 class="text-2xl font-bold text-slate-900 tracking-tight">Portal Operativo de Capacitación</h1>
-        <p class="text-sm text-slate-500">Herramientas prácticas, soporte en ruta y protocolos para conductores</p>
-      </div>
-      <div class="flex items-center gap-2 self-start sm:self-auto">
-        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-          Sistema Operativo Activo
-        </span>
-      </div>
-    </div>
+    <!-- ===================================================================== -->
+    <!-- CUERPO DE VISTAS                                                      -->
+    <!-- ===================================================================== -->
+    <main class="app-body">
 
-    <!-- ========================================================================= -->
-    <!-- VISTA PRINCIPAL: CUADRÍCULA DE TARJETAS (ESTILO IDÉNTICO A LA CAPTURA)     -->
-    <!-- ========================================================================= -->
-    <div id="viewDashboard" class="view-panel active">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+      <!-- =================================================================== -->
+      <!-- VISTA PRINCIPAL: DASHBOARD (IDÉNTICA A CAPTURA 2)                   -->
+      <!-- =================================================================== -->
+      <section id="viewDashboard" class="view-panel active">
 
-        <!-- Tarjeta 1: CD Talleres (Mosquera) -->
-        <div class="dashboard-card" onclick="openModule('cdTalleres')">
-          <div class="icon-badge">
-            <i data-lucide="wrench" class="w-7 h-7"></i>
-          </div>
-          <h3>CD Talleres</h3>
-          <p>Mantenimiento y flota vehicular</p>
-          <span class="mt-3 text-xs font-semibold text-rose-600 inline-flex items-center gap-1 group-hover:underline">
-            Ver auxilio mecánico & contactos <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
-          </span>
-        </div>
-
-        <!-- Tarjeta 2: Práctica App Choferes (Simulador interactivo) -->
-        <div class="dashboard-card" onclick="openModule('practicaApp')">
-          <div class="icon-badge">
-            <i data-lucide="smartphone" class="w-7 h-7"></i>
-          </div>
-          <h3>Práctica App Choferes</h3>
-          <p>Simulador interactivo y guías de uso</p>
-          <span class="mt-3 text-xs font-semibold text-rose-600 inline-flex items-center gap-1">
-            Entrenar entregas y firma <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
-          </span>
-        </div>
-
-        <!-- Tarjeta 3: Soporte Monitores & Supervisores -->
-        <div class="dashboard-card" onclick="openModule('soporteMonitores')">
-          <div class="icon-badge">
-            <i data-lucide="user-check" class="w-7 h-7"></i>
-          </div>
-          <h3>Asignación Monitores</h3>
-          <p>Registro de conductores y rutas con WhatsApp</p>
-          <span class="mt-3 text-xs font-semibold text-rose-600 inline-flex items-center gap-1">
-            Directorio de soporte 24/7 <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
-          </span>
-        </div>
-
-        <!-- Tarjeta 4: Evaluación Después de Ruta -->
-        <div class="dashboard-card" onclick="openModule('evaluacionRuta')">
-          <div class="icon-badge">
-            <i data-lucide="file-check-2" class="w-7 h-7"></i>
-          </div>
-          <h3>Evaluación Después de Ruta</h3>
-          <p>Checklist de retorno, combustible y novedades</p>
-          <span class="mt-3 text-xs font-semibold text-rose-600 inline-flex items-center gap-1">
-            Llenar o consultar formulario <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
-          </span>
-        </div>
-
-        <!-- Tarjeta 5: Organigrama del Equipo -->
-        <div class="dashboard-card" onclick="openModule('organigrama')">
-          <div class="icon-badge">
-            <i data-lucide="network" class="w-7 h-7"></i>
-          </div>
-          <h3>Organigrama del Equipo</h3>
-          <p>Estructura de Capacitación y Operaciones</p>
-          <span class="mt-3 text-xs font-semibold text-rose-600 inline-flex items-center gap-1">
-            Conocer líderes y áreas <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
-          </span>
-        </div>
-
-        <!-- Tarjeta 6: Agencias con Direcciones -->
-        <div class="dashboard-card" onclick="openModule('agencias')">
-          <div class="icon-badge">
-            <i data-lucide="map-pin" class="w-7 h-7"></i>
-          </div>
-          <h3>Agencias y Direcciones</h3>
-          <p>Sedes, garitas, Waze y Google Maps</p>
-          <span class="mt-3 text-xs font-semibold text-rose-600 inline-flex items-center gap-1">
-            Localizar sedes y accesos <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
-          </span>
-        </div>
-
-      </div>
-
-      <!-- Barra de accesos rápidos secundarios -->
-      <div class="mt-8 bg-white border border-slate-200 rounded-2xl p-4 flex flex-wrap items-center justify-between gap-4">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-600">
-            <i data-lucide="book-open" class="w-5 h-5"></i>
-          </div>
+        <!-- Tarjeta Destacada: Central y Soporte en Ruta -->
+        <div class="hero-support-card" onclick="openModule('soporteMonitores')">
           <div>
-            <h4 class="text-sm font-semibold text-slate-800">Manuales de Capacitación y Procedimientos</h4>
-            <p class="text-xs text-slate-500">Documentos en PDF, cartillas de manejo defensivo y EPP</p>
+            <h2 class="hero-support-title">Central y Soporte en Ruta</h2>
+            <p class="hero-support-desc">Asistencia mecánica, monitor y emergencias</p>
+          </div>
+          <div class="hero-support-icon">
+            <!-- Icono Headset Rojo -->
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3"/>
+              <path d="M21 19a2 2 0 0 1-2 2h-5"/>
+            </svg>
           </div>
         </div>
-        <button onclick="openModule('manualesPdf')" class="text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl transition">
-          Ver Manuales PDF
-        </button>
-      </div>
-    </div>
 
-    <!-- ========================================================================= -->
-    <!-- MÓDULO 1: CD TALLERES (INFORMACIÓN DE MOSQUERA Y FLOTA)                   -->
-    <!-- ========================================================================= -->
-    <div id="viewCdTalleres" class="view-panel">
-      <div class="flex items-center justify-between mb-6">
-        <button onclick="showDashboard()" class="btn-back">
-          <i data-lucide="arrow-left" class="w-4 h-4"></i> Volver al Menú
-        </button>
-        <span class="text-xs font-medium bg-rose-50 text-rose-700 px-3 py-1 rounded-full border border-rose-200">
-          Mantenimiento & Flota Mosquera
-        </span>
-      </div>
+        <!-- MÓDULOS DE ACCESO -->
+        <h3 class="section-label">MÓDULOS DE ACCESO</h3>
 
-      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm mb-6">
-        <div class="flex flex-col md:flex-row gap-6 items-start">
-          <div class="w-16 h-16 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center shrink-0">
-            <i data-lucide="wrench" class="w-8 h-8"></i>
+        <div class="modules-grid">
+          <!-- 1. Agencias & GPS -->
+          <div class="module-tile" onclick="openModule('agencias')">
+            <div class="module-tile-icon">
+              <svg width="38" height="38" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C8.686 2 6 4.686 6 8c0 4.5 6 11 6 11s6-6.5 6-11c0-3.314-2.686-6-6-6zm0 8.2a2.2 2.2 0 1 1 0-4.4 2.2 2.2 0 0 1 0 4.4z"/>
+                <path d="M9 17.5l-5 2V7l4.2-1.7c-.15.85-.2 1.75-.2 2.7 0 2.9 1.6 6.1 3.3 8.5L9 17.5zm6 0l-2.3-1c1.7-2.4 3.3-5.6 3.3-8.5 0-.95-.05-1.85-.2-2.7L20 7v12.5l-5-2z" opacity="0.85"/>
+              </svg>
+            </div>
+            <span class="module-tile-title">Agencias<br>&amp; GPS</span>
           </div>
-          <div class="flex-1">
-            <h2 class="text-xl font-bold text-slate-900">Taller Central Mosquera (Base Principal de Flota)</h2>
-            <p class="text-sm text-slate-600 mt-1">
-              Centro neurálgico para mantenimiento preventivo, correctivo, auxilio mecánico en ruta y asignación de unidades para la operación Huachipa - Lima Metropolitana.
-            </p>
-            <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-              <div class="flex items-center gap-2 text-slate-700">
-                <i data-lucide="map-pin" class="w-4 h-4 text-rose-500"></i>
-                <span><strong>Dirección:</strong> Av. Mosquera Mz. C Lote 4, Urb. Huachipa, Lurigancho</span>
-              </div>
-              <div class="flex items-center gap-2 text-slate-700">
-                <i data-lucide="clock" class="w-4 h-4 text-rose-500"></i>
-                <span><strong>Atención Taller:</strong> 24 Horas / 7 Días (Turnos Rotativos)</span>
-              </div>
-              <div class="flex items-center gap-2 text-slate-700">
-                <i data-lucide="radio" class="w-4 h-4 text-rose-500"></i>
-                <span><strong>Frecuencia Radio:</strong> Canal 04 (Flota Mosquera)</span>
-              </div>
-              <div class="flex items-center gap-2 text-slate-700">
-                <i data-lucide="shield-alert" class="w-4 h-4 text-rose-500"></i>
-                <span><strong>Auxilio Mecánico Ruta:</strong> Central Móvil Activa</span>
-              </div>
+
+          <!-- 2. Simulador App -->
+          <div class="module-tile" onclick="openModule('practicaApp')">
+            <div class="module-tile-icon">
+              <svg width="38" height="38" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M7 2h10a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm0 3v12h10V5H7zm5 15.5a1.25 1.25 0 1 0 0-2.5 1.25 1.25 0 0 0 0 2.5z"/>
+              </svg>
+            </div>
+            <span class="module-tile-title">Simulador<br>App</span>
+          </div>
+
+          <!-- 3. Reporte de Rutas (Bitácora de Ruta) -->
+          <div class="module-tile" onclick="openModule('bitacoraRuta')">
+            <div class="module-tile-icon">
+              <svg width="38" height="38" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0zM13 18h-2v-2h2v2zm0-4h-2V9h2v5z"/>
+              </svg>
+            </div>
+            <span class="module-tile-title">Reporte<br>de Rutas</span>
+          </div>
+
+          <!-- 4. Combustible & Talleres -->
+          <div class="module-tile" onclick="openModule('cdTalleres')">
+            <div class="module-tile-icon">
+              <svg width="38" height="38" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19.77 7.23l.01-.01-3.72-3.72L15 4.56l2.11 2.11c-.94.36-1.61 1.26-1.61 2.33a2.5 2.5 0 0 0 2.5 2.5c.36 0 .69-.08 1-.21v7.21a1 1 0 0 1-2 0V14a2 2 0 0 0-2-2h-1V5a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v16h10v-7.5h1.5v5a2.5 2.5 0 0 0 5 0V9c0-.69-.28-1.32-.73-1.77zM12 10H6V5h6v5zm6 0a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+              </svg>
+            </div>
+            <span class="module-tile-title">Combustible<br>&amp; Talleres</span>
+          </div>
+        </div>
+
+        <!-- AVISOS DEL ÁREA -->
+        <h3 class="section-label">AVISOS DEL ÁREA</h3>
+
+        <div class="notice-card">
+          📌 <strong>Capacitación:</strong> Recuerda practicar los flujos en el simulador antes de tu primera salida oficial a ruta.
+        </div>
+
+        <!-- Accesos rápidos secundarios ligeros (Evaluación Post-Ruta, Organigrama y Manuales) -->
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 14px;">
+          <button onclick="openModule('evaluacionRuta')" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 12px; text-align: left; cursor: pointer; display: flex; align-items: center; gap: 10px; box-shadow: var(--shadow-card);">
+            <span style="color: var(--shalom-red); display:flex;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            </span>
+            <span style="font-size: 0.78rem; font-weight: 700; color: #1e293b; line-height: 1.2;">Checklist<br>Post-Ruta</span>
+          </button>
+
+          <button onclick="openModule('manualesPdf')" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 12px; text-align: left; cursor: pointer; display: flex; align-items: center; gap: 10px; box-shadow: var(--shadow-card);">
+            <span style="color: var(--shalom-red); display:flex;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            </span>
+            <span style="font-size: 0.78rem; font-weight: 700; color: #1e293b; line-height: 1.2;">Manuales &amp;<br>Organigrama</span>
+          </button>
+        </div>
+
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- MÓDULO: BITÁCORA DE RUTA (IDÉNTICA A CAPTURAS 1 Y 3)                -->
+      <!-- =================================================================== -->
+      <section id="viewBitacoraRuta" class="view-panel">
+        <div class="white-panel-card">
+
+          <!-- Bloque Azul: Reporte Confidencial -->
+          <div class="confidential-box">
+            <div class="confidential-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3zm0 2.18l6 2.25v4.66c0 4.13-2.8 7.99-6 9.03V4.18z"/>
+              </svg>
+            </div>
+            <div class="confidential-text">
+              <strong>Reporte Confidencial:</strong> Tu comentario se publica de forma anónima ante otros usuarios, pero el área de Capacitación y Desarrollo podrá identificarlo para brindarte el apoyo necesario.
             </div>
           </div>
-        </div>
-      </div>
 
-      <!-- Directorio de Contactos de Emergencia y Taller Mosquera -->
-      <h3 class="text-base font-bold text-slate-800 mb-4 flex items-center gap-2">
-        <i data-lucide="phone-call" class="w-5 h-5 text-rose-600"></i>
-        Contactos Directos de Taller Mosquera
-      </h3>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-        <!-- Contacto 1: Auxilio Mecánico 24/7 -->
-        <div class="bg-white border border-rose-200 rounded-2xl p-5 shadow-sm hover:shadow transition">
-          <div class="flex justify-between items-start">
-            <div>
-              <span class="text-xs font-bold text-rose-600 uppercase tracking-wider">Urgencias en Ruta</span>
-              <h4 class="font-bold text-slate-900 text-lg">Central Auxilio Mecánico Mosquera</h4>
-              <p class="text-sm text-slate-500">Remolque, grúa, auxilio de batería y neumáticos</p>
-              <p class="text-sm font-semibold text-slate-800 mt-2">📞 987-654-321 / (01) 619-8001</p>
-            </div>
-          </div>
-          <div class="mt-4 flex gap-2">
-            <a href="https://wa.me/51987654321?text=HOLA%20TALLER%20MOSQUERA%2C%20SOY%20CHOFER%20EN%20RUTA%20REQUIERO%20AUXILIO%20MECANICO%20URGENTE." target="_blank" class="btn-whatsapp flex-1 justify-center">
-              <i data-lucide="message-circle" class="w-4 h-4"></i> WhatsApp Auxilio
-            </a>
-            <a href="tel:987654321" class="btn-call px-4">
-              <i data-lucide="phone" class="w-4 h-4"></i> Llamar
-            </a>
-          </div>
-        </div>
-
-        <!-- Contacto 2: Jefe de Taller y Mantenimiento -->
-        <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm hover:shadow transition">
-          <div class="flex justify-between items-start">
-            <div>
-              <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Jefatura Mantenimiento</span>
-              <h4 class="font-bold text-slate-900 text-lg">Ing. Roberto Sánchez</h4>
-              <p class="text-sm text-slate-500">Jefe de Taller Mosquera & Mantenimiento Flota</p>
-              <p class="text-sm font-semibold text-slate-800 mt-2">📞 994-321-789</p>
-            </div>
-          </div>
-          <div class="mt-4 flex gap-2">
-            <a href="https://wa.me/51994321789?text=Estimado%20Ing.%20Roberto%20S%C3%A1nchez%2C%20le%20escribo%20desde%20el%20portal%20de%20choferes%20de%20Mosquera." target="_blank" class="btn-whatsapp flex-1 justify-center">
-              <i data-lucide="message-circle" class="w-4 h-4"></i> WhatsApp
-            </a>
-            <a href="tel:994321789" class="btn-call px-4">
-              <i data-lucide="phone" class="w-4 h-4"></i> Llamar
-            </a>
-          </div>
-        </div>
-
-        <!-- Contacto 3: Supervisor Mecánico Turno Día / Noche -->
-        <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm hover:shadow transition">
-          <div class="flex justify-between items-start">
-            <div>
-              <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Supervisión Técnica</span>
-              <h4 class="font-bold text-slate-900 text-lg">Mec. Marco Alvarado</h4>
-              <p class="text-sm text-slate-500">Supervisor de Guardias & Diagnóstico</p>
-              <p class="text-sm font-semibold text-slate-800 mt-2">📞 971-456-123</p>
-            </div>
-          </div>
-          <div class="mt-4 flex gap-2">
-            <a href="https://wa.me/51971456123?text=Buenas%20tardes%2C%20solicito%20coordinar%20revisi%C3%B3n%20mec%C3%A1nica%20en%20CD%20Mosquera." target="_blank" class="btn-whatsapp flex-1 justify-center">
-              <i data-lucide="message-circle" class="w-4 h-4"></i> WhatsApp
-            </a>
-            <a href="tel:971456123" class="btn-call px-4">
-              <i data-lucide="phone" class="w-4 h-4"></i> Llamar
-            </a>
-          </div>
-        </div>
-
-        <!-- Contacto 4: Almacén de Repuestos & Neumáticos -->
-        <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm hover:shadow transition">
-          <div class="flex justify-between items-start">
-            <div>
-              <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Logística de Repuestos</span>
-              <h4 class="font-bold text-slate-900 text-lg">Garita de Repuestos Mosquera</h4>
-              <p class="text-sm text-slate-500">Entrega de baterías, llantas de repuesto y fluidos</p>
-              <p class="text-sm font-semibold text-slate-800 mt-2">📞 (01) 619-8002 / Anexo 104</p>
-            </div>
-          </div>
-          <div class="mt-4 flex gap-2">
-            <button onclick="alert('Horario de entrega de repuestos: Lunes a Sábado de 06:00 a 22:00 en Garita 2 Mosquera.')" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 py-2 rounded-xl text-sm font-semibold transition">
-              Consultar Horarios & Requisitos
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Protocolo Paso a Paso ante Averías en Ruta -->
-      <div class="bg-slate-100 border border-slate-200 rounded-2xl p-6">
-        <h3 class="text-base font-bold text-slate-900 mb-3 flex items-center gap-2">
-          <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-500"></i>
-          Protocolo Oficial ante Fallas Mecánicas en Ruta
-        </h3>
-        <ol class="space-y-3 text-sm text-slate-700 list-decimal list-inside">
-          <li><strong>Detención Segura:</strong> Estacionar en zona segura a la derecha, encender luces de emergencia e instalar triángulos de seguridad a 50 metros.</li>
-          <li><strong>Reporte Inmediato al Monitor Zonal:</strong> Notificar vía WhatsApp con tu ubicación en tiempo real y foto del desperfecto.</li>
-          <li><strong>Comunicación con Taller Mosquera:</strong> Llamar a la Central de Auxilio Mecánico Mosquera (987-654-321) indicando placa de la unidad y síntoma observado.</li>
-          <li><strong>Seguridad de la Carga:</strong> Mantener la tolva con candado y precinto intactos mientras llega la asistencia o unidad de transbordo.</li>
-        </ol>
-      </div>
-    </div>
-
-    <!-- ========================================================================= -->
-    <!-- MÓDULO 2: PRÁCTICA APP CHOFERES (SIMULADOR INTERACTIVO Y GUÍAS)           -->
-    <!-- ========================================================================= -->
-    <div id="viewPracticaApp" class="view-panel">
-      <div class="flex items-center justify-between mb-6">
-        <button onclick="showDashboard()" class="btn-back">
-          <i data-lucide="arrow-left" class="w-4 h-4"></i> Volver al Menú
-        </button>
-        <span class="text-xs font-medium bg-rose-50 text-rose-700 px-3 py-1 rounded-full border border-rose-200">
-          Entrenamiento Práctico
-        </span>
-      </div>
-
-      <!-- Pestañas del módulo: Simulador vs Guías -->
-      <div class="flex border-b border-slate-200 mb-6 gap-4">
-        <button id="tabBtnSimulator" onclick="switchPracticeTab('simulator')" class="pb-3 text-sm font-bold border-b-2 border-rose-600 text-rose-600">
-          Simulador Móvil de la App
-        </button>
-        <button id="tabBtnGuides" onclick="switchPracticeTab('guides')" class="pb-3 text-sm font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-800">
-          Guías Rápidas & Solución de Dudas
-        </button>
-      </div>
-
-      <!-- Sección 1: Simulador de Pantalla de Celular -->
-      <div id="practiceTabSimulator" class="block">
-        <div class="text-center max-w-lg mx-auto mb-6">
-          <h2 class="text-xl font-bold text-slate-900">Simulador de Entregas para Choferes</h2>
-          <p class="text-sm text-slate-500">
-            Practica el flujo completo de una entrega: revisión de pedido, escaneo de bulto, firma digital del cliente y cierre de visita sin riesgo de alterar datos reales.
-          </p>
-        </div>
-
-        <!-- Marco Físico de Celular -->
-        <div class="phone-simulator-frame">
-          <div class="phone-notch">
-            <div class="phone-notch-camera"></div>
-          </div>
-          <div class="phone-simulator-screen">
-            <!-- Barra Superior del Celular -->
-            <div class="phone-header">
-              <div class="flex items-center gap-1.5">
-                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-                <span>Ruta #HUACHIPA-04</span>
-              </div>
-              <span id="phoneClock" class="text-xs text-slate-300">14:30</span>
-            </div>
-
-            <!-- Contenido Dinámico de la Pantalla del Celular -->
-            <div class="phone-content" id="phoneScreenContent">
-
-              <!-- PASO 1: Lista de Entregas -->
-              <div id="simStep1" class="space-y-3">
-                <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
-                  <span class="text-xs text-slate-500 uppercase font-semibold">Chofer Asignado</span>
-                  <div class="text-sm font-bold text-slate-800" id="simDriverName">Diego Lizarbe</div>
-                  <div class="text-xs text-slate-500">Unidad: Camión 4T - Placa: <strong>B7A-892</strong></div>
-                </div>
-
-                <div class="flex justify-between items-center px-1">
-                  <span class="text-xs font-bold text-slate-700">Pedidos del Día (1 de 3 completado)</span>
-                  <span class="text-xs text-rose-600 font-semibold">Progreso 33%</span>
-                </div>
-
-                <!-- Pedido Pendiente para Practicar -->
-                <div class="bg-white p-3.5 rounded-xl border-2 border-rose-300 shadow-sm cursor-pointer hover:bg-rose-50/30 transition" onclick="simGoToStep(2)">
-                  <div class="flex justify-between items-start">
-                    <span class="text-xs px-2 py-0.5 rounded bg-amber-100 text-amber-800 font-bold">En Camino</span>
-                    <span class="text-xs font-mono text-slate-500">#ORD-9821</span>
-                  </div>
-                  <h4 class="font-bold text-sm text-slate-900 mt-2">Distribuidora Los Laureles S.A.C.</h4>
-                  <p class="text-xs text-slate-600 mt-0.5">Av. Nicolás Ayllón 2450, Ate Vitarte</p>
-                  <div class="mt-2 pt-2 border-t border-slate-100 flex justify-between items-center text-xs">
-                    <span class="text-slate-500">3 Bultos (Abarrotes)</span>
-                    <span class="text-rose-600 font-bold flex items-center gap-1">Gestionar <i data-lucide="chevron-right" class="w-3 h-3"></i></span>
-                  </div>
-                </div>
-
-                <!-- Otro pedido en cola -->
-                <div class="bg-white p-3 rounded-xl border border-slate-200 opacity-60">
-                  <div class="flex justify-between items-start">
-                    <span class="text-xs px-2 py-0.5 rounded bg-slate-100 text-slate-600 font-bold">Pendiente</span>
-                    <span class="text-xs font-mono text-slate-500">#ORD-9822</span>
-                  </div>
-                  <h4 class="font-bold text-xs text-slate-800 mt-1">Supermercado Santa Anita</h4>
-                  <p class="text-[11px] text-slate-500">Av. Los Ruiseñores 102</p>
-                </div>
-              </div>
-
-              <!-- PASO 2: Llegada y Escaneo de Bultos -->
-              <div id="simStep2" class="space-y-3 hidden">
-                <button onclick="simGoToStep(1)" class="text-xs text-slate-500 hover:text-slate-800 flex items-center gap-1 mb-1">
-                  <i data-lucide="chevron-left" class="w-3 h-3"></i> Volver a pedidos
-                </button>
-                <div class="bg-white p-3 rounded-xl border border-slate-200">
-                  <span class="text-xs text-slate-400">Cliente Actual</span>
-                  <h4 class="font-bold text-sm text-slate-900">Distribuidora Los Laureles</h4>
-                  <p class="text-xs text-slate-600">Guía de Remisión: GR-004-9821</p>
-                </div>
-
-                <div class="bg-slate-900 text-white p-4 rounded-xl text-center space-y-2">
-                  <div class="w-12 h-12 mx-auto rounded-full bg-rose-500/20 text-rose-400 flex items-center justify-center">
-                    <i data-lucide="qr-code" class="w-6 h-6"></i>
-                  </div>
-                  <h5 class="text-sm font-bold">Lector de Bultos y Guía</h5>
-                  <p class="text-xs text-slate-400">Simula el escaneo con la cámara del celular</p>
-                  
-                  <div id="simScanStatus" class="py-2 px-3 rounded bg-slate-800 text-xs font-mono text-amber-300">
-                    Bulto 1/3: Pendiente escaneo
-                  </div>
-
-                  <button id="simBtnScan" onclick="simTriggerScan()" class="w-full bg-rose-600 hover:bg-rose-500 text-white font-bold py-2 rounded-lg text-xs transition">
-                    Simular Escaneo de Bulto
-                  </button>
-                </div>
-
-                <button id="simBtnToDeliver" onclick="simGoToStep(3)" class="w-full bg-emerald-600 text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1 opacity-50 cursor-not-allowed" disabled>
-                  Continuar a Registro de Entrega <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
-                </button>
-              </div>
-
-              <!-- PASO 3: Firma Digital y Foto de Constancia -->
-              <div id="simStep3" class="space-y-3 hidden">
-                <button onclick="simGoToStep(2)" class="text-xs text-slate-500 hover:text-slate-800 flex items-center gap-1 mb-1">
-                  <i data-lucide="chevron-left" class="w-3 h-3"></i> Volver a escaneo
-                </button>
-
-                <div class="bg-white p-3 rounded-xl border border-slate-200">
-                  <h4 class="font-bold text-xs text-slate-800">Conformidad del Cliente</h4>
-                  <p class="text-[11px] text-slate-500">Pide al encargado su firma con el dedo en el recuadro:</p>
-                  
-                  <!-- Canvas interactivo de firma -->
-                  <div class="mt-2 relative">
-                    <canvas id="simCanvasSignature" class="signature-canvas"></canvas>
-                    <button onclick="simClearSignature()" class="absolute bottom-2 right-2 text-[10px] bg-slate-200 hover:bg-slate-300 text-slate-700 px-2 py-0.5 rounded font-semibold">
-                      Limpiar Firma
-                    </button>
-                  </div>
-                </div>
-
-                <div class="bg-white p-3 rounded-xl border border-slate-200 space-y-2">
-                  <div class="flex justify-between items-center text-xs">
-                    <span class="font-semibold text-slate-700">Foto de Fachada o Sello:</span>
-                    <button onclick="simTakePhoto()" class="text-rose-600 font-bold text-xs flex items-center gap-1">
-                      <i data-lucide="camera" class="w-3.5 h-3.5"></i> Capturar Foto
-                    </button>
-                  </div>
-                  <div id="simPhotoBox" class="h-16 bg-slate-100 rounded-lg border border-dashed border-slate-300 flex items-center justify-center text-xs text-slate-400">
-                    Sin foto capturada
-                  </div>
-                </div>
-
-                <button onclick="simCompleteDelivery()" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1 shadow-sm transition">
-                  <i data-lucide="check-circle" class="w-4 h-4"></i> Finalizar Entrega Conforme
-                </button>
-
-                <button onclick="simTriggerRejection()" class="w-full bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-1.5 rounded-xl text-xs transition">
-                  Registrar Motivo de No Entrega / Rechazo
-                </button>
-              </div>
-
-              <!-- PASO 4: Confirmación y Resumen -->
-              <div id="simStep4" class="space-y-4 text-center my-auto hidden">
-                <div class="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto">
-                  <i data-lucide="badge-check" class="w-8 h-8"></i>
-                </div>
-                <div>
-                  <h4 class="font-bold text-slate-900 text-base">¡Entrega Exitosa Registrada!</h4>
-                  <p class="text-xs text-slate-500 mt-1">
-                    La información se transmitió al servidor central de Huachipa con firma y geolocalización.
-                  </p>
-                </div>
-                <div class="bg-white p-3 rounded-xl border border-slate-200 text-xs text-left space-y-1">
-                  <div><strong>Cliente:</strong> Distribuidora Los Laureles</div>
-                  <div><strong>Bultos:</strong> 3 de 3 entregados</div>
-                  <div><strong>Hora:</strong> <span id="simSummaryTime"></span></div>
-                  <div><strong>Estado:</strong> <span class="text-emerald-600 font-bold">Liquidado OK</span></div>
-                </div>
-                <button onclick="simGoToStep(1)" class="w-full bg-slate-900 text-white font-bold py-2.5 rounded-xl text-xs">
-                  Volver a Lista de Pedidos
-                </button>
-              </div>
-
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Sección 2: Guías Rápidas & Preguntas Frecuentes -->
-      <div id="practiceTabGuides" class="hidden space-y-4">
-        <div class="bg-white border border-slate-200 rounded-2xl p-5">
-          <h3 class="font-bold text-slate-900 mb-2 flex items-center gap-2">
-            <i data-lucide="help-circle" class="w-5 h-5 text-rose-600"></i>
-            ¿Qué hacer si me quedo sin señal de internet en ruta?
-          </h3>
-          <p class="text-sm text-slate-600">
-            La app de choferes almacena automáticamente las firmas y fotos de manera <strong>offline (fuera de línea)</strong>. Continúa atendiendo al cliente con normalidad. En cuanto el vehículo ingrese a una zona con cobertura 4G/5G o al CD Mosquera/Huachipa con Wi-Fi, la app sincronizará los datos sin perder ningún registro.
-          </p>
-        </div>
-
-        <div class="bg-white border border-slate-200 rounded-2xl p-5">
-          <h3 class="font-bold text-slate-900 mb-2 flex items-center gap-2">
-            <i data-lucide="help-circle" class="w-5 h-5 text-rose-600"></i>
-            ¿Cómo proceder si el cliente no está en su domicilio o local?
-          </h3>
-          <p class="text-sm text-slate-600">
-            1. Realiza al menos 2 llamadas telefónicas desde la app al número registrado del cliente.<br>
-            2. Espera 10 minutos de tolerancia obligatoria.<br>
-            3. Si no hay respuesta, toma foto panorámica de la fachada con el número municipal visible.<br>
-            4. Selecciona en la app la opción: <em>"Cliente Ausente"</em> y avisa de inmediato a tu Monitor de Ruta.
-          </p>
-        </div>
-
-        <div class="bg-white border border-slate-200 rounded-2xl p-5">
-          <h3 class="font-bold text-slate-900 mb-2 flex items-center gap-2">
-            <i data-lucide="help-circle" class="w-5 h-5 text-rose-600"></i>
-            ¿Qué hacer si el cliente rechaza parte de la mercadería por daño?
-          </h3>
-          <p class="text-sm text-slate-600">
-            En la pantalla de entrega selecciona <em>"Entrega Parcial"</em>, ingresa la cantidad exacta aceptada, toma foto de la caja dañada y anota en la guía física la observación con firma de ambas partes antes de retirar el vehículo.
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <!-- ========================================================================= -->
-    <!-- MÓDULO 3: SOPORTE DE MONITORES & SUPERVISORES (CON BOTÓN WHATSAPP)         -->
-    <!-- ========================================================================= -->
-    <div id="viewSoporteMonitores" class="view-panel">
-      <div class="flex items-center justify-between mb-6">
-        <button onclick="showDashboard()" class="btn-back">
-          <i data-lucide="arrow-left" class="w-4 h-4"></i> Volver al Menú
-        </button>
-        <span class="text-xs font-medium bg-rose-50 text-rose-700 px-3 py-1 rounded-full border border-rose-200">
-          Asignación & Monitoreo
-        </span>
-      </div>
-
-      <div class="mb-6">
-        <h2 class="text-xl font-bold text-slate-900">Directorio de Monitores y Supervisores de Ruta</h2>
-        <p class="text-sm text-slate-500">
-          Comunícate de inmediato con el monitor asignado a tu zona para asistencia operativa, novedades de tráfico, rechazos o incidencias con clientes.
-        </p>
-      </div>
-
-      <!-- Buscador y Filtro de Zona -->
-      <div class="flex flex-col sm:flex-row gap-3 mb-6">
-        <div class="relative flex-1">
-          <i data-lucide="search" class="w-4 h-4 absolute left-3 top-3 text-slate-400"></i>
-          <input type="text" id="monitorSearchInput" onkeyup="filterMonitors()" placeholder="Buscar por nombre, zona o cargo..." class="w-full pl-9 pr-4 py-2 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-rose-500 bg-white">
-        </div>
-        <select id="monitorZoneFilter" onchange="filterMonitors()" class="py-2 px-3 border border-slate-300 rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-rose-500">
-          <option value="all">Todas las Zonas</option>
-          <option value="huachipa">Huachipa / Centro</option>
-          <option value="norte">Lima Norte</option>
-          <option value="sur">Lima Sur</option>
-          <option value="callao">Callao / Aeropuerto</option>
-          <option value="capacitacion">Área Capacitación</option>
-        </select>
-      </div>
-
-      <!-- Cuadrícula de Monitores -->
-      <div id="monitorsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <!-- Renderizado dinámico desde app.js -->
-      </div>
-    </div>
-
-    <!-- ========================================================================= -->
-    <!-- MÓDULO 4: EVALUACIÓN DESPUÉS DE RUTA (FORMULARIO Y RETORNO)               -->
-    <!-- ========================================================================= -->
-    <div id="viewEvaluacionRuta" class="view-panel">
-      <div class="flex items-center justify-between mb-6">
-        <button onclick="showDashboard()" class="btn-back">
-          <i data-lucide="arrow-left" class="w-4 h-4"></i> Volver al Menú
-        </button>
-        <span class="text-xs font-medium bg-rose-50 text-rose-700 px-3 py-1 rounded-full border border-rose-200">
-          Control & Retorno de Ruta
-        </span>
-      </div>
-
-      <div class="mb-6">
-        <h2 class="text-xl font-bold text-slate-900">Formulario de Evaluación Post-Ruta</h2>
-        <p class="text-sm text-slate-500">
-          Registro obligatorio de fin de jornada para conductores: kilometraje, combustible, efectividad de entregas y estado técnico de la unidad al retornar al CD.
-        </p>
-      </div>
-
-      <!-- Formulario Post-Ruta -->
-      <form id="postRouteForm" onsubmit="savePostRouteEvaluation(event)" class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-6">
-
-        <!-- Sección 1: Datos de la Jornada -->
-        <div>
-          <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-3 text-rose-600 flex items-center gap-1.5">
-            <i data-lucide="truck" class="w-4 h-4"></i> 1. Identificación de Unidad y Conductor
-          </h3>
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div>
-              <label class="block text-xs font-semibold text-slate-700 mb-1">Nombre del Conductor</label>
-              <input type="text" id="evalDriverName" required class="w-full p-2.5 border border-slate-300 rounded-xl text-sm bg-slate-50" readonly>
-            </div>
-            <div>
-              <label class="block text-xs font-semibold text-slate-700 mb-1">Placa de la Unidad *</label>
-              <input type="text" id="evalTruckPlate" placeholder="Ej. B7A-892" required class="w-full p-2.5 border border-slate-300 rounded-xl text-sm uppercase">
-            </div>
-            <div>
-              <label class="block text-xs font-semibold text-slate-700 mb-1">Centro de Distribución Retorno</label>
-              <select id="evalReturnCd" class="w-full p-2.5 border border-slate-300 rounded-xl text-sm bg-white">
-                <option value="CD Mosquera">CD Mosquera (Taller)</option>
-                <option value="CD Huachipa" selected>CD Huachipa (Principal)</option>
-                <option value="Base Bocanegra">Base Bocanegra (Callao)</option>
-                <option value="Base Lurín">Base Lurín (Sur)</option>
+          <form id="bitacoraForm" onsubmit="submitBitacoraReport(event)">
+            <div class="form-group">
+              <label for="bitacoraCategory" class="form-label">Categoría del problema</label>
+              <select id="bitacoraCategory" class="form-select" required>
+                <option value="" selected disabled>Selecciona una opción</option>
+                <option value="Demora en Agencia / Garita">Demora en Agencia / Garita</option>
+                <option value="Falla Mecánica o Unidad">Falla Mecánica o Unidad</option>
+                <option value="Incidencia con Cliente / Entrega">Incidencia con Cliente / Entrega</option>
+                <option value="Problema con App de Choferes">Problema con App de Choferes</option>
+                <option value="Ruta / Tráfico / Seguridad Vial">Ruta / Tráfico / Seguridad Vial</option>
+                <option value="Sugerencia de Mejora Operativa">Sugerencia de Mejora Operativa</option>
               </select>
             </div>
-          </div>
-        </div>
 
-        <!-- Sección 2: Kilometraje y Combustible -->
-        <div class="pt-4 border-t border-slate-100">
-          <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-3 text-rose-600 flex items-center gap-1.5">
-            <i data-lucide="gauge" class="w-4 h-4"></i> 2. Control de Odómetro y Combustible
-          </h3>
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div>
-              <label class="block text-xs font-semibold text-slate-700 mb-1">KM Inicial de Salida</label>
-              <input type="number" id="evalKmStart" placeholder="Ej. 142100" oninput="calculateKmDiff()" class="w-full p-2.5 border border-slate-300 rounded-xl text-sm">
+            <div class="form-group">
+              <label for="bitacoraDetails" class="form-label">¿Qué sucedió hoy en tu recorrido?</label>
+              <textarea id="bitacoraDetails" class="form-textarea" required placeholder="Describe los detalles del inconveniente o la sugerencia para mejorar la operación..."></textarea>
             </div>
-            <div>
-              <label class="block text-xs font-semibold text-slate-700 mb-1">KM Final de Retorno *</label>
-              <input type="number" id="evalKmEnd" placeholder="Ej. 142215" required oninput="calculateKmDiff()" class="w-full p-2.5 border border-slate-300 rounded-xl text-sm">
-            </div>
-            <div>
-              <label class="block text-xs font-semibold text-slate-700 mb-1">Total KM Recorridos</label>
-              <input type="text" id="evalKmTotal" readonly class="w-full p-2.5 border border-slate-200 bg-slate-100 font-bold text-rose-600 rounded-xl text-sm" value="0 KM">
-            </div>
-          </div>
 
-          <div class="mt-4">
-            <label class="block text-xs font-semibold text-slate-700 mb-2">Nivel de Combustible al Retornar:</label>
-            <div class="grid grid-cols-4 gap-2">
-              <label class="flex items-center justify-center p-2 rounded-xl border border-slate-200 hover:bg-rose-50 cursor-pointer text-xs font-semibold">
-                <input type="radio" name="fuelLevel" value="1/4" class="mr-1.5 text-rose-600" required> 1/4 Tanque
-              </label>
-              <label class="flex items-center justify-center p-2 rounded-xl border border-slate-200 hover:bg-rose-50 cursor-pointer text-xs font-semibold">
-                <input type="radio" name="fuelLevel" value="1/2" class="mr-1.5 text-rose-600"> 1/2 Tanque
-              </label>
-              <label class="flex items-center justify-center p-2 rounded-xl border border-slate-200 hover:bg-rose-50 cursor-pointer text-xs font-semibold">
-                <input type="radio" name="fuelLevel" value="3/4" class="mr-1.5 text-rose-600"> 3/4 Tanque
-              </label>
-              <label class="flex items-center justify-center p-2 rounded-xl border border-slate-200 hover:bg-rose-50 cursor-pointer text-xs font-semibold">
-                <input type="radio" name="fuelLevel" value="Full" class="mr-1.5 text-rose-600"> Tanque Lleno
-              </label>
-            </div>
-          </div>
-        </div>
-
-        <!-- Sección 3: Cumplimiento de Entregas -->
-        <div class="pt-4 border-t border-slate-100">
-          <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-3 text-rose-600 flex items-center gap-1.5">
-            <i data-lucide="package-check" class="w-4 h-4"></i> 3. Cumplimiento de Entregas en Ruta
-          </h3>
-          <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
-            <div>
-              <label class="block text-xs font-semibold text-slate-700 mb-1">Pedidos Programados</label>
-              <input type="number" id="evalOrdersScheduled" min="0" value="18" oninput="calculateDeliveryRatio()" class="w-full p-2.5 border border-slate-300 rounded-xl text-sm">
-            </div>
-            <div>
-              <label class="block text-xs font-semibold text-slate-700 mb-1">Pedidos Entregados</label>
-              <input type="number" id="evalOrdersCompleted" min="0" value="17" oninput="calculateDeliveryRatio()" class="w-full p-2.5 border border-slate-300 rounded-xl text-sm">
-            </div>
-            <div>
-              <label class="block text-xs font-semibold text-slate-700 mb-1">Rechazos / Devueltos</label>
-              <input type="number" id="evalOrdersReturned" min="0" value="1" oninput="calculateDeliveryRatio()" class="w-full p-2.5 border border-slate-300 rounded-xl text-sm">
-            </div>
-            <div>
-              <label class="block text-xs font-semibold text-slate-700 mb-1">% Efectividad</label>
-              <input type="text" id="evalEfficiencyPercent" readonly class="w-full p-2.5 border border-slate-200 bg-emerald-50 text-emerald-700 font-bold rounded-xl text-sm" value="94.4%">
-            </div>
-          </div>
-        </div>
-
-        <!-- Sección 4: Checklist Físico del Vehículo -->
-        <div class="pt-4 border-t border-slate-100">
-          <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-3 text-rose-600 flex items-center gap-1.5">
-            <i data-lucide="clipboard-check" class="w-4 h-4"></i> 4. Estado de la Unidad al Entregar en CD
-          </h3>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-            <label class="flex items-center gap-2 p-2 rounded-lg bg-slate-50 border border-slate-200 cursor-pointer">
-              <input type="checkbox" id="checkLights" checked class="rounded text-rose-600"> Faros y luces direccionales conformes
-            </label>
-            <label class="flex items-center gap-2 p-2 rounded-lg bg-slate-50 border border-slate-200 cursor-pointer">
-              <input type="checkbox" id="checkTires" checked class="rounded text-rose-600"> Presión de neumáticos y repuesto sin daños
-            </label>
-            <label class="flex items-center gap-2 p-2 rounded-lg bg-slate-50 border border-slate-200 cursor-pointer">
-              <input type="checkbox" id="checkClean" checked class="rounded text-rose-600"> Tolva limpia sin residuos ni cartones
-            </label>
-            <label class="flex items-center gap-2 p-2 rounded-lg bg-slate-50 border border-slate-200 cursor-pointer">
-              <input type="checkbox" id="checkTools" checked class="rounded text-rose-600"> Gata, llaves, triángulos y extintor vigentes
-            </label>
-          </div>
-        </div>
-
-        <!-- Sección 5: Novedades e Incidencias -->
-        <div class="pt-4 border-t border-slate-100">
-          <label class="block text-xs font-semibold text-slate-700 mb-1">Novedades mecánicas, problemas de ruta o comentarios:</label>
-          <textarea id="evalIncidents" rows="2" placeholder="Escribir si hubo ruidos extraños en frenos, retrasos por manifestaciones, fallas del aplicativo, etc." class="w-full p-3 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-rose-500"></textarea>
-        </div>
-
-        <!-- Firma Digital del Chofer -->
-        <div class="pt-4 border-t border-slate-100">
-          <label class="block text-xs font-semibold text-slate-700 mb-1">Firma de Conformidad del Conductor:</label>
-          <div class="relative">
-            <canvas id="evalCanvasSignature" class="signature-canvas"></canvas>
-            <button type="button" onclick="clearEvalSignature()" class="absolute bottom-2 right-2 text-xs bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-1 rounded-lg font-semibold">
-              Limpiar Firma
+            <button type="submit" class="btn-primary-red">
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+              </svg>
+              Enviar Reporte
             </button>
-          </div>
+          </form>
         </div>
 
-        <!-- Botones de Acción -->
-        <div class="flex flex-col sm:flex-row gap-3 pt-4">
-          <button type="submit" class="flex-1 bg-rose-600 hover:bg-rose-700 text-white font-bold py-3 px-6 rounded-xl shadow-sm flex items-center justify-center gap-2 transition">
-            <i data-lucide="save" class="w-4 h-4"></i> Guardar Evaluación Post-Ruta
-          </button>
-          <button type="button" onclick="shareEvalByWhatsApp()" class="btn-whatsapp justify-center py-3 px-6 rounded-xl">
-            <i data-lucide="share-2" class="w-4 h-4"></i> Enviar a Monitor por WhatsApp
-          </button>
-        </div>
-      </form>
-
-      <!-- Historial de Evaluaciones Guardadas -->
-      <div class="mt-8">
-        <h3 class="text-base font-bold text-slate-800 mb-3 flex items-center gap-2">
-          <i data-lucide="history" class="w-5 h-5 text-slate-500"></i> Historial Reciente de Evaluaciones
-        </h3>
-        <div id="evalHistoryContainer" class="space-y-3">
-          <!-- Renderizado dinámico -->
-        </div>
-      </div>
-    </div>
-
-    <!-- ========================================================================= -->
-    <!-- MÓDULO 5: ORGANIGRAMA DEL EQUIPO                                          -->
-    <!-- ========================================================================= -->
-    <div id="viewOrganigrama" class="view-panel">
-      <div class="flex items-center justify-between mb-6">
-        <button onclick="showDashboard()" class="btn-back">
-          <i data-lucide="arrow-left" class="w-4 h-4"></i> Volver al Menú
-        </button>
-        <span class="text-xs font-medium bg-rose-50 text-rose-700 px-3 py-1 rounded-full border border-rose-200">
-          Estructura Organizacional
-        </span>
-      </div>
-
-      <div class="mb-6">
-        <h2 class="text-xl font-bold text-slate-900">Organigrama del Área de Capacitación y Operaciones</h2>
-        <p class="text-sm text-slate-500">
-          Conoce a los líderes de equipo, la jerarquía de soporte y la línea de contacto directa para consultas operativas y formación continua.
-        </p>
-      </div>
-
-      <!-- Diagrama de Organigrama -->
-      <div class="space-y-6">
-
-        <!-- Nivel 1: Jefatura de Operaciones y Transporte -->
-        <div class="flex justify-center">
-          <div class="org-node w-full max-w-sm text-center">
-            <span class="text-[11px] font-bold text-rose-600 uppercase tracking-wider">Dirección General</span>
-            <h4 class="font-bold text-slate-900 text-base mt-1">Ing. Manuel Valdivia</h4>
-            <p class="text-xs text-slate-500">Gerente de Transporte & Operaciones Huachipa</p>
-            <div class="mt-2 text-xs text-slate-600 bg-slate-50 py-1 px-2 rounded inline-block">
-              Supervisión de flota y estrategia logística
-            </div>
+        <!-- Historial de Reportes de Bitácora -->
+        <div class="mt-4">
+          <h3 class="section-label" style="margin-top: 20px;">REPORTES RECIENTES EN BITÁCORA</h3>
+          <div id="bitacoraHistoryList">
+            <!-- Renderizado desde app.js -->
           </div>
         </div>
+      </section>
 
-        <div class="w-0.5 h-6 bg-rose-300 mx-auto"></div>
-
-        <!-- Nivel 2: Jefatura de Capacitación y Coordinación de Flota -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
-          <div class="org-node text-center">
-            <span class="text-[11px] font-bold text-rose-600 uppercase tracking-wider">Área de Capacitación</span>
-            <h4 class="font-bold text-slate-900 text-base mt-1">Lic. Diego Lizarbe</h4>
-            <p class="text-xs text-slate-500">Jefe de Capacitación & Escuela de Conductores</p>
-            <p class="text-[11px] text-slate-600 mt-2">Inducción, simuladores de app, manejo defensivo y KPIs</p>
-          </div>
-
-          <div class="org-node text-center">
-            <span class="text-[11px] font-bold text-rose-600 uppercase tracking-wider">Coordinación de Flota</span>
-            <h4 class="font-bold text-slate-900 text-base mt-1">Ing. David Ramos</h4>
-            <p class="text-xs text-slate-500">Coordinador de Monitoreo & Despacho Central</p>
-            <p class="text-[11px] text-slate-600 mt-2">Ruteo satelital GPS, asignación de camiones y tiempos</p>
-          </div>
+      <!-- =================================================================== -->
+      <!-- MÓDULO: CENTRAL Y SOPORTE EN RUTA (MONITORES + EMERGENCIAS)         -->
+      <!-- =================================================================== -->
+      <section id="viewSoporteMonitores" class="view-panel">
+        <!-- Buscador y Filtro de Zona -->
+        <div class="white-panel-card mb-3" style="padding: 14px;">
+          <input type="text" id="monitorSearchInput" oninput="filterMonitors()" placeholder="Buscar monitor por nombre o distrito..." class="form-input mb-2" style="padding: 10px 14px; font-size: 0.86rem;">
+          <select id="monitorZoneFilter" onchange="filterMonitors()" class="form-select" style="padding: 10px 14px; font-size: 0.85rem; border-color: #cbd5e1;">
+            <option value="all">Todas las Zonas Operativas</option>
+            <option value="huachipa">CD Huachipa / Lima Este</option>
+            <option value="norte">Lima Norte (Comas, Olivos, Carabayllo)</option>
+            <option value="sur">Lima Sur (Chorrillos, VES, Lurín)</option>
+            <option value="callao">Callao / Aeropuerto / Ventanilla</option>
+            <option value="capacitacion">Escuela de Choferes &amp; Capacitación</option>
+          </select>
         </div>
 
-        <div class="w-0.5 h-6 bg-rose-300 mx-auto"></div>
+        <!-- Lista de Monitores -->
+        <div id="monitorsGrid"></div>
+      </section>
 
-        <!-- Nivel 3: Supervisores Zonales y Taller Mosquera -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div class="org-node">
-            <span class="text-[10px] font-bold text-slate-500 uppercase">Mantenimiento Flota</span>
-            <h4 class="font-bold text-slate-900 text-sm mt-1">Ing. Roberto Sánchez</h4>
-            <p class="text-xs text-slate-500">Jefe de Taller Central Mosquera</p>
-            <p class="text-[11px] text-slate-600 mt-2">Disponibilidad mecánica y auxilio en ruta 24/7</p>
-          </div>
-
-          <div class="org-node">
-            <span class="text-[10px] font-bold text-slate-500 uppercase">Supervisión Rutas Norte & Callao</span>
-            <h4 class="font-bold text-slate-900 text-sm mt-1">Miguel Ángel Quispe</h4>
-            <p class="text-xs text-slate-500">Supervisor Zonal de Distribución</p>
-            <p class="text-[11px] text-slate-600 mt-2">Soporte a choferes en Cono Norte y puerto</p>
-          </div>
-
-          <div class="org-node">
-            <span class="text-[10px] font-bold text-slate-500 uppercase">Supervisión Rutas Este & Sur</span>
-            <h4 class="font-bold text-slate-900 text-sm mt-1">Carlos Mendoza</h4>
-            <p class="text-xs text-slate-500">Supervisor Zonal de Distribución</p>
-            <p class="text-[11px] text-slate-600 mt-2">Soporte en Huachipa, Ate, Vitarte y Cono Sur</p>
-          </div>
-        </div>
-
-        <div class="w-0.5 h-6 bg-rose-300 mx-auto"></div>
-
-        <!-- Nivel 4: Monitores de Acompañamiento y Choferes -->
-        <div class="bg-white border border-slate-200 rounded-2xl p-5 text-center">
-          <span class="text-xs font-bold text-rose-600 uppercase tracking-wider">Equipo de Monitores de Ruta & Conductores</span>
-          <p class="text-sm font-semibold text-slate-800 mt-1">Monitores de Acompañamiento en Vivo (Huachipa / Mosquera)</p>
-          <p class="text-xs text-slate-500 mt-1 max-w-xl mx-auto">
-            Monitores en campo asignados para resolver incidencias de entrega, rechazos y brindar refuerzo constante en el uso de la aplicación móvil de ruta.
-          </p>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- ========================================================================= -->
-    <!-- MÓDULO 6: AGENCIAS CON DIRECCIONES & SEDES                                -->
-    <!-- ========================================================================= -->
-    <div id="viewAgencias" class="view-panel">
-      <div class="flex items-center justify-between mb-6">
-        <button onclick="showDashboard()" class="btn-back">
-          <i data-lucide="arrow-left" class="w-4 h-4"></i> Volver al Menú
-        </button>
-        <span class="text-xs font-medium bg-rose-50 text-rose-700 px-3 py-1 rounded-full border border-rose-200">
-          Red de Sedes & Garitas
-        </span>
-      </div>
-
-      <div class="mb-6">
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-          <div>
-            <h2 class="text-xl font-bold text-slate-900">Directorio Oficial de Agencias Shalom & Hubs</h2>
-            <p class="text-sm text-slate-500">
-              Red operativa en Lima Metropolitana y Callao con direcciones oficiales, horarios de atención y GPS directo (Waze / Google Maps).
-            </p>
-          </div>
-          <div class="shrink-0">
-            <span id="agencyCountBadge" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-rose-100 text-rose-800 border border-rose-200">
-              <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
+      <!-- =================================================================== -->
+      <!-- MÓDULO: AGENCIAS & GPS (194 SEDES SHALOM OPTIMIZADAS A 60 FPS)      -->
+      <!-- =================================================================== -->
+      <section id="viewAgencias" class="view-panel">
+        <div class="white-panel-card mb-3" style="padding: 15px;">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-bold" style="color: #475569;">Red Oficial Lima &amp; Callao</span>
+            <span id="agencyCountBadge" style="background: #fef2f2; color: var(--shalom-red); font-size: 0.72rem; font-weight: 800; padding: 4px 10px; border-radius: 999px; border: 1px solid #fecaca;">
               194 Sedes Activas
             </span>
           </div>
-        </div>
-      </div>
 
-      <!-- Barra de Filtros y Búsqueda -->
-      <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm mb-6 space-y-3">
-        <!-- Buscador -->
-        <div class="relative">
-          <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-3"></i>
-          <input type="text" id="agencySearchInput" oninput="filterAgencies()" placeholder="Buscar por nombre de sede, avenida, calle, referencia o distrito..." class="w-full pl-10 pr-16 py-2.5 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-rose-500 bg-white">
-          <button onclick="clearAgencySearch()" id="btnClearSearch" class="hidden absolute right-3 top-2.5 text-slate-400 hover:text-slate-600 text-xs bg-slate-100 hover:bg-slate-200 px-2 py-0.5 rounded transition">Limpiar</button>
-        </div>
+          <div style="position: relative;" class="mb-2">
+            <input type="text" id="agencySearchInput" oninput="scheduleFilterAgencies()" placeholder="Buscar sede, avenida, referencia o distrito..." class="form-input" style="padding: 11px 68px 11px 14px; font-size: 0.86rem;">
+            <button onclick="clearAgencySearch()" id="btnClearSearch" class="hidden" style="position: absolute; right: 8px; top: 8px; background: #f1f5f9; border: none; border-radius: 8px; padding: 5px 9px; font-size: 0.72rem; font-weight: 700; color: #475569; cursor: pointer;">
+              Limpiar
+            </button>
+          </div>
 
-        <!-- Filtros Rápidos por Zona -->
-        <div class="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs">
-          <span class="text-slate-400 font-semibold uppercase text-[10px] shrink-0 mr-1">Zona:</span>
-          <button type="button" onclick="setAgencyZone('todas', this)" class="agency-zone-btn active px-3 py-1.5 rounded-lg font-medium transition bg-rose-600 text-white">Todas (194)</button>
-          <button type="button" onclick="setAgencyZone('hubs', this)" class="agency-zone-btn px-3 py-1.5 rounded-lg font-medium transition bg-slate-100 hover:bg-slate-200 text-slate-700">⭐ Talleres & CD</button>
-          <button type="button" onclick="setAgencyZone('Lima Norte', this)" class="agency-zone-btn px-3 py-1.5 rounded-lg font-medium transition bg-slate-100 hover:bg-slate-200 text-slate-700">Lima Norte</button>
-          <button type="button" onclick="setAgencyZone('Lima Este', this)" class="agency-zone-btn px-3 py-1.5 rounded-lg font-medium transition bg-slate-100 hover:bg-slate-200 text-slate-700">Lima Este</button>
-          <button type="button" onclick="setAgencyZone('Lima Sur', this)" class="agency-zone-btn px-3 py-1.5 rounded-lg font-medium transition bg-slate-100 hover:bg-slate-200 text-slate-700">Lima Sur</button>
-          <button type="button" onclick="setAgencyZone('Lima Centro', this)" class="agency-zone-btn px-3 py-1.5 rounded-lg font-medium transition bg-slate-100 hover:bg-slate-200 text-slate-700">Lima Centro</button>
-          <button type="button" onclick="setAgencyZone('Callao', this)" class="agency-zone-btn px-3 py-1.5 rounded-lg font-medium transition bg-slate-100 hover:bg-slate-200 text-slate-700">Callao</button>
-        </div>
+          <!-- Chips de Zona -->
+          <div class="zone-chips-scroll mb-2">
+            <button type="button" onclick="setAgencyZone('todas', this)" class="zone-chip active">Todas (194)</button>
+            <button type="button" onclick="setAgencyZone('hubs', this)" class="zone-chip">⭐ Hubs &amp; CD</button>
+            <button type="button" onclick="setAgencyZone('Lima Este', this)" class="zone-chip">Lima Este</button>
+            <button type="button" onclick="setAgencyZone('Lima Norte', this)" class="zone-chip">Lima Norte</button>
+            <button type="button" onclick="setAgencyZone('Lima Centro', this)" class="zone-chip">Lima Centro</button>
+            <button type="button" onclick="setAgencyZone('Lima Sur', this)" class="zone-chip">Lima Sur</button>
+            <button type="button" onclick="setAgencyZone('Callao', this)" class="zone-chip">Callao</button>
+          </div>
 
-        <!-- Selector de Distrito -->
-        <div class="flex items-center gap-2 pt-2 border-t border-slate-100">
-          <label for="agencyDistrictSelect" class="text-xs font-semibold text-slate-600 shrink-0">Distrito:</label>
-          <select id="agencyDistrictSelect" onchange="filterAgencies()" class="w-full text-xs py-2 px-3 border border-slate-200 rounded-xl bg-slate-50 focus:outline-none focus:ring-2 focus:ring-rose-500 text-slate-700 font-medium">
-            <option value="">Todos los distritos de Lima y Callao (194 sedes)</option>
+          <!-- Selector de Distrito -->
+          <select id="agencyDistrictSelect" onchange="filterAgencies()" class="form-select" style="padding: 9px 34px 9px 12px; font-size: 0.8rem; border-color: #e2e8f0; background-color: #f8fafc;">
+            <option value="">Todos los distritos de Lima y Callao</option>
           </select>
         </div>
-      </div>
 
-      <!-- Lista de Agencias -->
-      <div id="agenciesList" class="space-y-4">
-        <!-- Renderizado dinámico desde app.js -->
-      </div>
+        <!-- Lista de Agencias con Content-Visibility 60fps -->
+        <div id="agenciesList"></div>
 
-      <!-- Botón para cargar más agencias -->
-      <div id="agenciesLoadMoreContainer" class="mt-6 text-center hidden">
-        <button onclick="loadMoreAgencies()" class="px-6 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-700 text-xs font-bold hover:bg-slate-50 shadow-sm transition inline-flex items-center gap-2">
-          <i data-lucide="chevron-down" class="w-4 h-4"></i> Mostrar más agencias
-        </button>
-      </div>
-    </div>
-
-    <!-- ========================================================================= -->
-    <!-- MÓDULO 7: MANUALES PDF & DOCUMENTACIÓN DE CAPACITACIÓN                    -->
-    <!-- ========================================================================= -->
-    <div id="viewManualesPdf" class="view-panel">
-      <div class="flex items-center justify-between mb-6">
-        <button onclick="showDashboard()" class="btn-back">
-          <i data-lucide="arrow-left" class="w-4 h-4"></i> Volver al Menú
-        </button>
-        <span class="text-xs font-medium bg-rose-50 text-rose-700 px-3 py-1 rounded-full border border-rose-200">
-          Material Didáctico
-        </span>
-      </div>
-
-      <div class="mb-6">
-        <h2 class="text-xl font-bold text-slate-900">Manuales PDF e Instructivos para Choferes</h2>
-        <p class="text-sm text-slate-500">
-          Documentos oficiales de la Escuela de Conductores, estándares de seguridad y guías técnicas de la aplicación móvil.
-        </p>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div class="bg-white border border-slate-200 rounded-2xl p-5 flex items-start gap-4">
-          <div class="w-12 h-12 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center shrink-0">
-            <i data-lucide="file-text" class="w-6 h-6"></i>
-          </div>
-          <div class="flex-1">
-            <h4 class="font-bold text-sm text-slate-900">Manual de Usuario: App Choferes v3.2</h4>
-            <p class="text-xs text-slate-500 mt-1">Guía completa ilustrada paso a paso: inicio de ruta, carga de pedidos, firma y cierre.</p>
-            <div class="mt-3 flex gap-2">
-              <button onclick="alert('Abriendo manual ilustrado de la App Choferes...')" class="text-xs font-bold text-rose-600 hover:underline">
-                Descargar / Ver PDF (2.4 MB)
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div class="bg-white border border-slate-200 rounded-2xl p-5 flex items-start gap-4">
-          <div class="w-12 h-12 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center shrink-0">
-            <i data-lucide="shield" class="w-6 h-6"></i>
-          </div>
-          <div class="flex-1">
-            <h4 class="font-bold text-sm text-slate-900">Cartilla de Manejo Defensivo y EPP</h4>
-            <p class="text-xs text-slate-500 mt-1">Protocolos de velocidad, fatiga al volante, uso obligatorio de chaleco y botines dieléctricos.</p>
-            <div class="mt-3 flex gap-2">
-              <button onclick="alert('Abriendo cartilla oficial de seguridad vial y EPP...')" class="text-xs font-bold text-rose-600 hover:underline">
-                Descargar / Ver PDF (1.1 MB)
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div class="bg-white border border-slate-200 rounded-2xl p-5 flex items-start gap-4">
-          <div class="w-12 h-12 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center shrink-0">
-            <i data-lucide="wrench" class="w-6 h-6"></i>
-          </div>
-          <div class="flex-1">
-            <h4 class="font-bold text-sm text-slate-900">Checklist Preoperativo CD Mosquera</h4>
-            <p class="text-xs text-slate-500 mt-1">Formato de inspección vehicular antes de encender el motor y salida de garita.</p>
-            <div class="mt-3 flex gap-2">
-              <button onclick="alert('Abriendo plantilla de checklist preoperativo Mosquera...')" class="text-xs font-bold text-rose-600 hover:underline">
-                Descargar / Ver PDF (850 KB)
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div class="bg-white border border-slate-200 rounded-2xl p-5 flex items-start gap-4">
-          <div class="w-12 h-12 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center shrink-0">
-            <i data-lucide="phone-forwarded" class="w-6 h-6"></i>
-          </div>
-          <div class="flex-1">
-            <h4 class="font-bold text-sm text-slate-900">Directorio de Emergencias en Ruta</h4>
-            <p class="text-sm text-slate-500 mt-1">Números de PNP de carreteras, ambulancias, bomberos y grúas autorizadas.</p>
-            <div class="mt-3 flex gap-2">
-              <button onclick="alert('Abriendo directorio de emergencias nacionales...')" class="text-xs font-bold text-rose-600 hover:underline">
-                Descargar / Ver PDF (620 KB)
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </div> <!-- Fin max-w-4xl -->
-
-  <!-- ========================================================================= -->
-  <!-- MODAL: GESTIONAR DNIs / PERFILES DE CHOFER                                -->
-  <!-- ========================================================================= -->
-  <div id="modalDni" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200">
-      <div class="flex justify-between items-center mb-4">
-        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
-          <i data-lucide="id-card" class="w-5 h-5 text-rose-600"></i>
-          Gestionar DNIs de Conductores
-        </h3>
-        <button onclick="closeDniModal()" class="text-slate-400 hover:text-slate-600">
-          <i data-lucide="x" class="w-5 h-5"></i>
-        </button>
-      </div>
-
-      <p class="text-xs text-slate-500 mb-4">
-        Selecciona o actualiza el chofer activo en este dispositivo para personalizar las evaluaciones y la práctica del aplicativo:
-      </p>
-
-      <div class="space-y-3 mb-5 max-h-60 overflow-y-auto" id="driversListContainer">
-        <!-- Renderizado dinámico desde app.js -->
-      </div>
-
-      <div class="border-t border-slate-100 pt-3">
-        <label class="block text-xs font-semibold text-slate-700 mb-1">Registrar Nuevo Chofer en Entrenamiento</label>
-        <div class="flex gap-2">
-          <input type="text" id="newDriverName" placeholder="Nombres y Apellidos" class="flex-1 p-2 border border-slate-300 rounded-lg text-xs">
-          <input type="text" id="newDriverDni" placeholder="DNI" maxlength="8" class="w-24 p-2 border border-slate-300 rounded-lg text-xs">
-          <button onclick="registerNewDriver()" class="bg-rose-600 hover:bg-rose-700 text-white font-bold px-3 py-2 rounded-lg text-xs">
-            Agregar
+        <div id="agenciesLoadMoreContainer" class="mt-3 hidden">
+          <button onclick="loadMoreAgencies()" class="btn-primary-red" style="background: #1e293b; box-shadow: none; padding: 13px;">
+            Mostrar más agencias
           </button>
         </div>
-      </div>
+      </section>
 
-      <div class="mt-4 flex justify-end">
-        <button onclick="closeDniModal()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold px-4 py-2 rounded-lg">
-          Cerrar
+      <!-- =================================================================== -->
+      <!-- MÓDULO: SIMULADOR APP CHOFERES + GUÍAS RÁPIDAS                      -->
+      <!-- =================================================================== -->
+      <section id="viewPracticaApp" class="view-panel">
+        <div class="pill-tabs">
+          <button id="tabBtnSimulator" onclick="switchPracticeTab('simulator')" class="pill-tab-btn active">
+            📱 Simulador de Ruta
+          </button>
+          <button id="tabBtnGuides" onclick="switchPracticeTab('guides')" class="pill-tab-btn">
+            📘 Guías &amp; Protocolos
+          </button>
+        </div>
+
+        <!-- Tab 1: Simulador Móvil -->
+        <div id="practiceTabSimulator">
+          <div class="phone-simulator-frame">
+            <div class="phone-notch"></div>
+            <div class="phone-simulator-screen">
+              <div class="phone-header">
+                <div class="flex items-center gap-2">
+                  <span style="width: 8px; height: 8px; border-radius: 50%; background: #34d399; display: inline-block;"></span>
+                  <span>Ruta #HUACHIPA-04</span>
+                </div>
+                <span id="phoneClock" style="font-size: 0.75rem; color: #cbd5e1;">14:30</span>
+              </div>
+
+              <div class="phone-content" id="phoneScreenContent">
+                <!-- PASO 1: Lista de Pedidos -->
+                <div id="simStep1">
+                  <div style="background: #ffffff; padding: 11px 13px; border-radius: 14px; border: 1px solid #e2e8f0; margin-bottom: 10px;">
+                    <div style="font-size: 0.68rem; font-weight: 700; color: #64748b; text-transform: uppercase;">Chofer Activo</div>
+                    <div style="font-size: 0.9rem; font-weight: 800; color: #0f172a;" id="simDriverName">Diego Lizarbe</div>
+                    <div style="font-size: 0.75rem; color: #64748b;">Unidad: Camión 4T • Placa: <strong id="simDriverPlate">B7A-892</strong></div>
+                  </div>
+
+                  <div class="flex justify-between items-center mb-2" style="padding: 0 2px; font-size: 0.76rem; font-weight: 700;">
+                    <span style="color: #334155;">Entregas del Día (1/3)</span>
+                    <span style="color: var(--shalom-red);">Toque para practicar</span>
+                  </div>
+
+                  <!-- Pedido Activo -->
+                  <div onclick="simGoToStep(2)" style="background: #ffffff; padding: 14px; border-radius: 16px; border: 2px solid #fca5a5; cursor: pointer; margin-bottom: 10px; box-shadow: 0 4px 10px rgba(211,47,47,0.08);">
+                    <div class="flex justify-between items-center">
+                      <span style="font-size: 0.7rem; background: #fef3c7; color: #92400e; font-weight: 800; padding: 2px 8px; border-radius: 6px;">EN CAMINO</span>
+                      <span style="font-size: 0.74rem; font-family: monospace; color: #64748b;">#ORD-9821</span>
+                    </div>
+                    <h4 style="font-size: 0.92rem; font-weight: 800; color: #0f172a; margin-top: 6px;">Distribuidora Los Laureles S.A.C.</h4>
+                    <p style="font-size: 0.76rem; color: #475569; margin-top: 2px;">Av. Nicolás Ayllón 2450, Ate Vitarte</p>
+                    <div class="flex justify-between items-center mt-2" style="padding-top: 8px; border-top: 1px solid #f1f5f9; font-size: 0.76rem;">
+                      <span style="color: #64748b;">📦 3 Bultos (Abarrotes)</span>
+                      <span style="color: var(--shalom-red); font-weight: 800;">Gestionar →</span>
+                    </div>
+                  </div>
+
+                  <!-- Siguiente en cola -->
+                  <div style="background: #ffffff; padding: 12px; border-radius: 14px; border: 1px solid #e2e8f0; opacity: 0.65;">
+                    <div class="flex justify-between items-center">
+                      <span style="font-size: 0.68rem; background: #f1f5f9; color: #475569; font-weight: 700; padding: 2px 7px; border-radius: 6px;">PENDIENTE</span>
+                      <span style="font-size: 0.72rem; font-family: monospace; color: #64748b;">#ORD-9822</span>
+                    </div>
+                    <h4 style="font-size: 0.82rem; font-weight: 700; color: #1e293b; margin-top: 4px;">Supermercado Santa Anita</h4>
+                    <p style="font-size: 0.72rem; color: #64748b;">Av. Los Ruiseñores 102</p>
+                  </div>
+                </div>
+
+                <!-- PASO 2: Escaneo de Bultos -->
+                <div id="simStep2" class="hidden">
+                  <button onclick="simGoToStep(1)" style="background: none; border: none; color: #475569; font-size: 0.76rem; font-weight: 700; cursor: pointer; margin-bottom: 8px;">
+                    ← Volver a pedidos
+                  </button>
+                  <div style="background: #ffffff; padding: 12px; border-radius: 14px; border: 1px solid #e2e8f0; margin-bottom: 10px;">
+                    <div style="font-size: 0.7rem; color: #64748b;">Cliente Actual</div>
+                    <div style="font-size: 0.9rem; font-weight: 800; color: #0f172a;">Distribuidora Los Laureles</div>
+                    <div style="font-size: 0.75rem; color: #475569;">Guía: GR-004-9821</div>
+                  </div>
+
+                  <div style="background: #0f172a; color: #ffffff; padding: 16px; border-radius: 16px; text-align: center; margin-bottom: 10px;">
+                    <div style="font-size: 0.9rem; font-weight: 800; margin-bottom: 4px;">Lector QR de Bultos</div>
+                    <p style="font-size: 0.74rem; color: #94a3b8; margin-bottom: 10px;">Valida los 3 bultos antes de entregar</p>
+                    <div id="simScanStatus" style="background: #1e293b; color: #fcd34d; padding: 8px; border-radius: 10px; font-size: 0.76rem; font-family: monospace; margin-bottom: 10px;">
+                      Bulto 1/3: Pendiente escaneo
+                    </div>
+                    <button id="simBtnScan" onclick="simTriggerScan()" class="btn-primary-red" style="padding: 11px; font-size: 0.84rem;">
+                      Escanear Bulto (0/3)
+                    </button>
+                  </div>
+
+                  <button id="simBtnToDeliver" onclick="simGoToStep(3)" disabled style="width: 100%; background: #059669; color: #ffffff; border: none; border-radius: 14px; padding: 12px; font-size: 0.84rem; font-weight: 700; opacity: 0.45; cursor: not-allowed;">
+                    Continuar a Firma y Foto →
+                  </button>
+                </div>
+
+                <!-- PASO 3: Firma Digital y Foto -->
+                <div id="simStep3" class="hidden">
+                  <button onclick="simGoToStep(2)" style="background: none; border: none; color: #475569; font-size: 0.76rem; font-weight: 700; cursor: pointer; margin-bottom: 8px;">
+                    ← Volver a escaneo
+                  </button>
+
+                  <div style="background: #ffffff; padding: 12px; border-radius: 14px; border: 1px solid #e2e8f0; margin-bottom: 10px;">
+                    <div class="flex justify-between items-center mb-2">
+                      <span style="font-size: 0.78rem; font-weight: 800; color: #0f172a;">Firma del Cliente (Dedo)</span>
+                      <button onclick="simClearSignature()" style="background: #f1f5f9; border: none; border-radius: 6px; padding: 3px 8px; font-size: 0.7rem; font-weight: 700; color: #475569; cursor: pointer;">Limpiar</button>
+                    </div>
+                    <canvas id="simCanvasSignature" class="signature-canvas"></canvas>
+                  </div>
+
+                  <div style="background: #ffffff; padding: 12px; border-radius: 14px; border: 1px solid #e2e8f0; margin-bottom: 10px;">
+                    <div class="flex justify-between items-center mb-2">
+                      <span style="font-size: 0.76rem; font-weight: 700; color: #334155;">Evidencia Fotográfica:</span>
+                      <button onclick="simTakePhoto()" style="background: #fef2f2; color: var(--shalom-red); border: 1px solid #fecaca; border-radius: 8px; padding: 4px 10px; font-size: 0.74rem; font-weight: 800; cursor: pointer;">
+                        📷 Tomar Foto
+                      </button>
+                    </div>
+                    <div id="simPhotoBox" style="height: 48px; background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 0.74rem; color: #94a3b8;">
+                      Sin foto capturada
+                    </div>
+                  </div>
+
+                  <button onclick="simCompleteDelivery()" class="btn-primary-red" style="padding: 12px; font-size: 0.86rem; margin-bottom: 8px;">
+                    ✔ Finalizar Entrega Conforme
+                  </button>
+                  <button onclick="simTriggerRejection()" style="width: 100%; background: #e2e8f0; color: #334155; border: none; border-radius: 12px; padding: 9px; font-size: 0.76rem; font-weight: 700; cursor: pointer;">
+                    Reportar Cliente Ausente / Rechazo
+                  </button>
+                </div>
+
+                <!-- PASO 4: Éxito -->
+                <div id="simStep4" class="hidden" style="text-align: center; padding: 24px 10px;">
+                  <div style="width: 54px; height: 54px; border-radius: 50%; background: #d1fae5; color: #059669; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; font-size: 1.5rem; font-weight: 800;">
+                    ✓
+                  </div>
+                  <h4 style="font-size: 1rem; font-weight: 800; color: #0f172a;">¡Entrega Liquidada OK!</h4>
+                  <p style="font-size: 0.78rem; color: #64748b; margin-top: 4px;">Sincronizado con CD Huachipa.</p>
+                  <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 12px; text-align: left; font-size: 0.76rem; margin: 14px 0; line-height: 1.6;">
+                    <div><strong>Cliente:</strong> Distribuidora Los Laureles</div>
+                    <div><strong>Bultos:</strong> 3/3 validados</div>
+                    <div><strong>Hora:</strong> <span id="simSummaryTime"></span></div>
+                  </div>
+                  <button onclick="simGoToStep(1)" class="btn-primary-red" style="background: #0f172a; box-shadow: none; padding: 12px; font-size: 0.84rem;">
+                    Practicar Otra Entrega
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2: Guías Rápidas -->
+        <div id="practiceTabGuides" class="hidden">
+          <div class="fast-card">
+            <h4 style="font-size: 0.92rem; font-weight: 800; color: #0f172a; margin-bottom: 6px;">📶 ¿Sin señal de internet en ruta?</h4>
+            <p style="font-size: 0.82rem; color: #475569;">La App Choferes guarda firmas y fotos en modo <strong>Offline</strong>. Continúa la atención normalmente; al recuperar cobertura 4G o llegar al CD se sincroniza automáticamente.</p>
+          </div>
+          <div class="fast-card">
+            <h4 style="font-size: 0.92rem; font-weight: 800; color: #0f172a; margin-bottom: 6px;">🚪 ¿Cliente ausente o local cerrado?</h4>
+            <p style="font-size: 0.82rem; color: #475569;">1. Realiza 2 llamadas al cliente.<br>2. Espera 10 min de tolerancia.<br>3. Toma foto de la fachada con número visible.<br>4. Marca <em>"Cliente Ausente"</em> y notifica al Monitor Zonal.</p>
+          </div>
+          <div class="fast-card">
+            <h4 style="font-size: 0.92rem; font-weight: 800; color: #0f172a; margin-bottom: 6px;">📦 ¿Rechazo parcial por mercadería?</h4>
+            <p style="font-size: 0.82rem; color: #475569;">Selecciona <em>"Entrega Parcial"</em>, registra los bultos aceptados, toma foto de la observación y haz firmar la guía física antes de retirarte.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- MÓDULO: COMBUSTIBLE & TALLERES (CD MOSQUERA + AUXILIO)              -->
+      <!-- =================================================================== -->
+      <section id="viewCdTalleres" class="view-panel">
+        <div class="pill-tabs">
+          <button id="tabTallerContacts" onclick="switchTallerTab('taller')" class="pill-tab-btn active">
+            🔧 Taller Mosquera 24/7
+          </button>
+          <button id="tabTallerFuel" onclick="openModule('evaluacionRuta')" class="pill-tab-btn">
+            ⛽ Combustible &amp; KM
+          </button>
+        </div>
+
+        <div class="white-panel-card mb-3">
+          <span style="font-size: 0.72rem; font-weight: 800; color: var(--shalom-red); text-transform: uppercase;">Base Principal de Flota</span>
+          <h3 style="font-size: 1.05rem; font-weight: 800; color: #0f172a; margin-top: 2px;">CD Taller Central Mosquera</h3>
+          <p style="font-size: 0.82rem; color: #475569; margin-top: 4px;">Av. Mosquera Mz. C Lote 4, Urb. Huachipa • Atención 24/7 • Radio Canal 04</p>
+        </div>
+
+        <!-- Auxilio Mecánico Urgente -->
+        <div class="fast-card hub-highlight">
+          <span style="font-size: 0.7rem; font-weight: 800; color: var(--shalom-red); text-transform: uppercase;">Urgencias en Ruta</span>
+          <h4 style="font-size: 0.98rem; font-weight: 800; color: #0f172a; margin-top: 2px;">Central Auxilio Mecánico Mosquera</h4>
+          <p style="font-size: 0.8rem; color: #475569;">Remolque, grúa, auxilio de batería y neumáticos • 📞 987-654-321</p>
+          <div class="action-row">
+            <a href="https://wa.me/51987654321?text=HOLA%20TALLER%20MOSQUERA%2C%20SOY%20CHOFER%20EN%20RUTA%20REQUIERO%20AUXILIO%20MECANICO%20URGENTE." target="_blank" class="btn-wa">
+              WhatsApp Auxilio
+            </a>
+            <a href="tel:987654321" class="btn-call">
+              Llamar
+            </a>
+          </div>
+        </div>
+
+        <!-- Jefatura de Mantenimiento -->
+        <div class="fast-card">
+          <span style="font-size: 0.7rem; font-weight: 800; color: #64748b; text-transform: uppercase;">Jefatura Mantenimiento</span>
+          <h4 style="font-size: 0.95rem; font-weight: 800; color: #0f172a; margin-top: 2px;">Ing. Roberto Sánchez</h4>
+          <p style="font-size: 0.8rem; color: #475569;">Jefe de Taller Mosquera &amp; Flota • 📞 994-321-789</p>
+          <div class="action-row">
+            <a href="https://wa.me/51994321789?text=Estimado%20Ing.%20Roberto%20S%C3%A1nchez%2C%20le%20escribo%20desde%20el%20portal%20de%20choferes." target="_blank" class="btn-wa">
+              WhatsApp
+            </a>
+            <a href="tel:994321789" class="btn-call">
+              Llamar
+            </a>
+          </div>
+        </div>
+
+        <!-- Supervisión Guardia -->
+        <div class="fast-card">
+          <span style="font-size: 0.7rem; font-weight: 800; color: #64748b; text-transform: uppercase;">Supervisión Técnica</span>
+          <h4 style="font-size: 0.95rem; font-weight: 800; color: #0f172a; margin-top: 2px;">Mec. Marco Alvarado</h4>
+          <p style="font-size: 0.8rem; color: #475569;">Supervisor de Guardias &amp; Diagnóstico • 📞 971-456-123</p>
+          <div class="action-row">
+            <a href="https://wa.me/51971456123?text=Solicito%20coordinar%20revisi%C3%B3n%20mec%C3%A1nica%20en%20CD%20Mosquera." target="_blank" class="btn-wa">
+              WhatsApp
+            </a>
+            <a href="tel:971456123" class="btn-call">
+              Llamar
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- MÓDULO: COMBUSTIBLE, ODÓMETRO & EVALUACIÓN POST-RUTA                -->
+      <!-- =================================================================== -->
+      <section id="viewEvaluacionRuta" class="view-panel">
+        <form id="postRouteForm" onsubmit="savePostRouteEvaluation(event)" class="white-panel-card">
+          <div class="form-group">
+            <label class="form-label">Conductor y Placa de Unidad</label>
+            <div style="display: grid; grid-template-columns: 1.3fr 1fr; gap: 8px;">
+              <input type="text" id="evalDriverName" readonly class="form-input" style="background: #f8fafc; font-size: 0.84rem;">
+              <input type="text" id="evalTruckPlate" required placeholder="B7A-892" class="form-input" style="font-size: 0.84rem; text-transform: uppercase;">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Base de Retorno</label>
+            <select id="evalReturnCd" class="form-select" style="border-color: #cbd5e1;">
+              <option value="CD Huachipa" selected>CD Huachipa (Principal)</option>
+              <option value="CD Mosquera">CD Mosquera (Taller)</option>
+              <option value="Base Bocanegra">Base Bocanegra (Callao)</option>
+              <option value="Base Lurín">Base Lurín (Sur)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Control de Odómetro (KM)</label>
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;">
+              <input type="number" id="evalKmStart" placeholder="KM Inicio" oninput="calculateKmDiff()" class="form-input" style="padding: 10px; font-size: 0.82rem;">
+              <input type="number" id="evalKmEnd" placeholder="KM Final *" required oninput="calculateKmDiff()" class="form-input" style="padding: 10px; font-size: 0.82rem;">
+              <input type="text" id="evalKmTotal" readonly value="0 KM" class="form-input" style="padding: 10px; font-size: 0.82rem; background: #fef2f2; color: var(--shalom-red); font-weight: 800; text-align: center;">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Nivel de Combustible al Retornar</label>
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; font-size: 0.78rem; font-weight: 700;">
+              <label style="border: 1px solid #cbd5e1; border-radius: 10px; padding: 9px 4px; text-align: center; cursor: pointer;">
+                <input type="radio" name="fuelLevel" value="1/4" required> 1/4
+              </label>
+              <label style="border: 1px solid #cbd5e1; border-radius: 10px; padding: 9px 4px; text-align: center; cursor: pointer;">
+                <input type="radio" name="fuelLevel" value="1/2"> 1/2
+              </label>
+              <label style="border: 1px solid #cbd5e1; border-radius: 10px; padding: 9px 4px; text-align: center; cursor: pointer;">
+                <input type="radio" name="fuelLevel" value="3/4" checked> 3/4
+              </label>
+              <label style="border: 1px solid #cbd5e1; border-radius: 10px; padding: 9px 4px; text-align: center; cursor: pointer;">
+                <input type="radio" name="fuelLevel" value="Full"> Full
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Efectividad de Entregas</label>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
+              <div>
+                <span style="font-size: 0.7rem; color: #64748b;">Programados</span>
+                <input type="number" id="evalOrdersScheduled" value="18" oninput="calculateDeliveryRatio()" class="form-input" style="padding: 9px; font-size: 0.84rem;">
+              </div>
+              <div>
+                <span style="font-size: 0.7rem; color: #64748b;">Entregados</span>
+                <input type="number" id="evalOrdersCompleted" value="17" oninput="calculateDeliveryRatio()" class="form-input" style="padding: 9px; font-size: 0.84rem;">
+              </div>
+              <div>
+                <span style="font-size: 0.7rem; color: #64748b;">Efectividad</span>
+                <input type="text" id="evalEfficiencyPercent" readonly value="94.4%" class="form-input" style="padding: 9px; font-size: 0.84rem; background: #ecfdf5; color: #047857; font-weight: 800;">
+              </div>
+            </div>
+          </div>
+
+          <div style="display: none;">
+            <input type="number" id="evalOrdersReturned" value="1">
+            <input type="checkbox" id="checkLights" checked>
+            <input type="checkbox" id="checkTires" checked>
+            <input type="checkbox" id="checkClean" checked>
+            <input type="checkbox" id="checkTools" checked>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Observaciones de Unidad / Ruta</label>
+            <textarea id="evalIncidents" rows="2" placeholder="Sin novedades mecánicas..." class="form-textarea" style="min-height: 76px;"></textarea>
+          </div>
+
+          <div class="form-group">
+            <div class="flex justify-between items-center mb-2">
+              <label class="form-label" style="margin-bottom:0;">Firma de Conformidad</label>
+              <button type="button" onclick="clearEvalSignature()" style="background:#f1f5f9; border:none; padding:4px 10px; border-radius:8px; font-size:0.72rem; font-weight:700; cursor:pointer;">Limpiar</button>
+            </div>
+            <canvas id="evalCanvasSignature" class="signature-canvas"></canvas>
+          </div>
+
+          <button type="submit" class="btn-primary-red mb-2">
+            Guardar Control Post-Ruta
+          </button>
+          <button type="button" onclick="shareEvalByWhatsApp()" class="btn-wa w-full" style="padding: 13px;">
+            Enviar Resumen por WhatsApp
+          </button>
+        </form>
+
+        <h3 class="section-label">HISTORIAL RECIENTE</h3>
+        <div id="evalHistoryContainer"></div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- MÓDULO: MANUALES PDF & ORGANIGRAMA                                  -->
+      <!-- =================================================================== -->
+      <section id="viewManualesPdf" class="view-panel">
+        <h3 class="section-label" style="margin-top: 0;">DOCUMENTACIÓN OFICIAL</h3>
+
+        <div class="fast-card">
+          <h4 style="font-size: 0.92rem; font-weight: 800; color: #0f172a;">📘 Manual de Usuario: App Choferes v3.2</h4>
+          <p style="font-size: 0.78rem; color: #64748b; margin: 4px 0 10px;">Guía paso a paso: inicio de ruta, escaneo QR, firma digital y liquidación.</p>
+          <button onclick="showToast('Abriendo Manual App Choferes PDF...')" style="background: #fef2f2; color: var(--shalom-red); border: 1px solid #fecaca; padding: 7px 12px; border-radius: 10px; font-size: 0.76rem; font-weight: 800; cursor: pointer;">
+            Descargar / Ver PDF (2.4 MB)
+          </button>
+        </div>
+
+        <div class="fast-card">
+          <h4 style="font-size: 0.92rem; font-weight: 800; color: #0f172a;">🦺 Cartilla de Manejo Defensivo y EPP</h4>
+          <p style="font-size: 0.78rem; color: #64748b; margin: 4px 0 10px;">Protocolos de velocidad, chaleco reflectivo y botines de seguridad en garita.</p>
+          <button onclick="showToast('Abriendo Cartilla de Seguridad y EPP...')" style="background: #fef2f2; color: var(--shalom-red); border: 1px solid #fecaca; padding: 7px 12px; border-radius: 10px; font-size: 0.76rem; font-weight: 800; cursor: pointer;">
+            Descargar / Ver PDF (1.1 MB)
+          </button>
+        </div>
+
+        <h3 class="section-label">ORGANIGRAMA DE OPERACIONES &amp; CAPACITACIÓN</h3>
+        <div class="fast-card">
+          <div style="font-size: 0.7rem; font-weight: 800; color: var(--shalom-red); text-transform: uppercase;">Jefatura de Capacitación</div>
+          <div style="font-size: 0.95rem; font-weight: 800; color: #0f172a;">Lic. Diego Lizarbe</div>
+          <div style="font-size: 0.78rem; color: #64748b;">Jefe de Capacitación &amp; Escuela de Conductores</div>
+        </div>
+        <div class="fast-card">
+          <div style="font-size: 0.7rem; font-weight: 800; color: #475569; text-transform: uppercase;">Dirección de Operaciones</div>
+          <div style="font-size: 0.95rem; font-weight: 800; color: #0f172a;">Ing. Manuel Valdivia • Ing. David Ramos</div>
+          <div style="font-size: 0.78rem; color: #64748b;">Gerencia de Transporte &amp; Coordinación GPS Central</div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- MODAL PERFIL CHOFER / GESTIONAR DNIs                                    -->
+  <!-- ======================================================================= -->
+  <div id="modalDni" class="modal-backdrop hidden" onclick="if(event.target===this) closeDniModal()">
+    <div class="modal-card">
+      <div class="flex justify-between items-center mb-3">
+        <h3 style="font-size: 1.05rem; font-weight: 800; color: #0f172a;">Perfil del Conductor</h3>
+        <button onclick="closeDniModal()" style="background: #f1f5f9; border: none; width: 32px; height: 32px; border-radius: 50%; font-weight: 800; cursor: pointer;">✕</button>
+      </div>
+      <p style="font-size: 0.78rem; color: #64748b; margin-bottom: 12px;">
+        Selecciona el conductor activo en este dispositivo:
+      </p>
+
+      <div id="driversListContainer" style="max-height: 210px; overflow-y: auto; margin-bottom: 14px;"></div>
+
+      <div style="border-top: 1px solid #e2e8f0; padding-top: 12px;">
+        <label style="display:block; font-size: 0.75rem; font-weight: 700; color: #334155; margin-bottom: 6px;">Registrar Chofer en Entrenamiento</label>
+        <div class="flex gap-2 mb-2">
+          <input type="text" id="newDriverName" placeholder="Nombre y Apellido" class="form-input" style="padding: 9px 11px; font-size: 0.8rem;">
+          <input type="text" id="newDriverDni" placeholder="DNI" maxlength="8" class="form-input" style="width: 95px; padding: 9px 11px; font-size: 0.8rem;">
+        </div>
+        <button onclick="registerNewDriver()" class="btn-primary-red" style="padding: 10px; font-size: 0.84rem;">
+          Agregar Conductor
         </button>
       </div>
     </div>
   </div>
 
-  <!-- Pie de página discreto -->
-  <footer class="mt-auto py-6 border-t border-slate-200 bg-white text-center text-xs text-slate-500">
-    <p>Área de Capacitación & Escuela de Choferes • Operación CD Huachipa</p>
-    <p class="text-[11px] text-slate-400 mt-1">Plataforma compatible con teléfonos celulares, tablets y computadoras</p>
-  </footer>
+  <!-- Toast de Notificación Rápida -->
+  <div id="appToast" class="app-toast">Reporte enviado</div>
 
-  <!-- Scripts -->
+  <!-- Scripts (Sin dependencias pesadas bloqueantes) -->
   <script src="agencies_data.js"></script>
   <script src="app.js"></script>
-  <script>
-    // Inicializar iconos de Lucide
-    lucide.createIcons();
-  </script>
 </body>
 </html>
