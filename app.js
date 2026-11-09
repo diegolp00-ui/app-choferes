@@ -25,7 +25,7 @@ const MODULE_HEADERS = {
   },
   cdTalleres: {
     title: "Combustible & Talleres",
-    subtitle: "Taller Central Mosquera y auxilio"
+    subtitle: "CD Talleres y auxilio mecánico"
   },
   evaluacionRuta: {
     title: "Control Post-Ruta",
@@ -1031,13 +1031,13 @@ function loadSavedEvaluations() {
           date: "Hoy 17:15",
           driver: "Diego Lizarbe",
           plate: "B7A-892",
-          cd: "CD Mosquera",
+          cd: "CD Talleres",
           kmTotal: "115.0 KM",
           fuel: "3/4",
           completed: "17",
           scheduled: "18",
           efficiency: "94.4%",
-          incidents: "Retorno sin novedades a garita Mosquera."
+          incidents: "Retorno sin novedades a garita CD Talleres."
         }
       ];
     }
