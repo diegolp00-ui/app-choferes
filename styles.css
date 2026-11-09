@@ -704,3 +704,204 @@ body {
 .text-sm { font-size: 0.86rem; }
 .font-bold { font-weight: 700; }
 .w-full { width: 100%; }
+
+/* ==========================================================================
+   ORGANIGRAMA ÁREA DE DISTRIBUCIÓN (SHALOM OFICIAL)
+   ========================================================================== */
+.org-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin-top: 8px;
+}
+
+.org-pill-header {
+  background: linear-gradient(135deg, #c62828 0%, #b71c1c 100%);
+  color: #ffffff;
+  font-size: 1.15rem;
+  font-weight: 800;
+  text-align: center;
+  padding: 10px 24px;
+  border-radius: 999px;
+  box-shadow: 0 4px 14px rgba(183, 28, 28, 0.28);
+  margin-bottom: 14px;
+  letter-spacing: -0.01em;
+  width: 100%;
+  max-width: 320px;
+}
+
+/* Conectores tipo organigrama */
+.org-line-v {
+  width: 3px;
+  height: 14px;
+  background-color: #b71c1c;
+  margin: 0 auto;
+}
+
+.org-fork-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.org-fork-bar {
+  width: 70%;
+  height: 3px;
+  background-color: #b71c1c;
+}
+
+.org-fork-legs {
+  width: 70%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.org-fork-leg {
+  width: 3px;
+  height: 12px;
+  background-color: #b71c1c;
+}
+
+/* Grilla de Supervisores */
+.org-supervisors-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  width: 100%;
+}
+
+/* Tarjeta de Nodo */
+.org-node-card {
+  background: #ffffff;
+  border: 2px solid #b71c1c;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 4px 14px rgba(183, 28, 28, 0.08);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.org-node-card.full-width {
+  max-width: 100%;
+}
+
+.org-node-top {
+  display: flex;
+  align-items: center;
+  padding: 8px 10px;
+  gap: 10px;
+}
+
+.org-node-avatar {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.org-node-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.org-node-name {
+  background: #b71c1c;
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 0.8rem;
+  line-height: 1.2;
+  padding: 5px 8px;
+  border-radius: 7px;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  text-align: center;
+}
+
+.org-node-role {
+  color: #b71c1c;
+  font-weight: 800;
+  font-size: 0.78rem;
+  line-height: 1.2;
+  text-align: center;
+  padding: 2px 4px 0;
+}
+
+/* Modificadores para la grilla de supervisores */
+.org-supervisors-grid .org-node-top {
+  flex-direction: column;
+  text-align: center;
+  padding: 8px 6px;
+  gap: 6px;
+}
+
+.org-supervisors-grid .org-node-name {
+  font-size: 0.7rem;
+  padding: 4px 5px;
+}
+
+.org-supervisors-grid .org-node-role {
+  font-size: 0.72rem;
+}
+
+/* Botones de acción */
+.org-node-actions {
+  display: flex;
+  gap: 6px;
+  padding: 7px 8px;
+  background: #fdf2f2;
+  border-top: 1px solid #fee2e2;
+}
+
+.org-action-call, .org-action-wa {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 6px 6px;
+  border-radius: 9px;
+  font-size: 0.74rem;
+  font-weight: 800;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.12s ease;
+}
+
+.org-action-call {
+  background: #ffffff;
+  color: #b71c1c;
+  border: 1px solid #fca5a5;
+}
+
+.org-action-wa {
+  background: #25d366;
+  color: #ffffff;
+  border: none;
+}
+
+.org-action-call:active, .org-action-wa:active {
+  transform: scale(0.96);
+}
+
+.org-action-pending {
+  flex: 1;
+  padding: 6px 4px;
+  border-radius: 9px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #94a3b8;
+  background: #f1f5f9;
+  border: 1px dashed #cbd5e1;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+

@@ -32,8 +32,8 @@ const MODULE_HEADERS = {
     subtitle: "Odómetro, combustible y entregas"
   },
   manualesPdf: {
-    title: "Manuales & Equipo",
-    subtitle: "Guías operativas y organigrama"
+    title: "Manuales & Organigrama",
+    subtitle: "Área de Distribución y guías oficiales"
   }
 };
 
@@ -52,6 +52,33 @@ const AppState = {
     { name: "Roberto Gómez Ruiz", dni: "48991203", license: "A-IIIb", status: "Habilitado" }
   ],
   monitors: [
+    {
+      name: "John Xavier Vela Yataco",
+      role: "Coordinador de Distribución",
+      zone: "distribucion",
+      zoneLabel: "Coordinación Central de Distribución",
+      phone: "908686693",
+      schedule: "06:00 - 18:00",
+      status: "En Línea"
+    },
+    {
+      name: "Oswaldo Villanueva Díaz",
+      role: "Supervisor 01 - Distribución",
+      zone: "distribucion",
+      zoneLabel: "Supervisión de Operaciones",
+      phone: "970136598",
+      schedule: "06:00 - 16:30",
+      status: "En Ruta"
+    },
+    {
+      name: "Olenka Pamela Rubín Olivares",
+      role: "Asistente de Distribución",
+      zone: "distribucion",
+      zoneLabel: "Asistencia Operativa y Despacho",
+      phone: "933146218",
+      schedule: "07:00 - 17:00",
+      status: "En Línea"
+    },
     {
       name: "Juan Carlos Morales",
       role: "Monitor Líder de Ruta",
@@ -276,6 +303,16 @@ function openDniModal() {
 
 function closeDniModal() {
   document.getElementById("modalDni").classList.add("hidden");
+}
+
+function openOrgModal() {
+  const modal = document.getElementById("modalOrgImg");
+  if (modal) modal.classList.remove("hidden");
+}
+
+function closeOrgModal() {
+  const modal = document.getElementById("modalOrgImg");
+  if (modal) modal.classList.add("hidden");
 }
 
 function renderDriversList() {
