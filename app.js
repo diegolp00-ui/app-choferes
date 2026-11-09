@@ -17,7 +17,7 @@ const MODULE_HEADERS = {
   },
   agencias: {
     title: "Agencias & GPS",
-    subtitle: "194 sedes, horarios y navegación"
+    subtitle: "195 sedes, horarios y navegación"
   },
   practicaApp: {
     title: "Simulador App",
