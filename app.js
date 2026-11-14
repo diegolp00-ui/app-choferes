@@ -224,8 +224,8 @@ function openModule(moduleId, pushHistory = true) {
 
 function reloadEmbeddedSimulator() {
   const iframe = document.getElementById("officialSimulatorIframe");
-  if (iframe && iframe.contentWindow) {
-    iframe.contentWindow.location.reload();
+  if (iframe) {
+    iframe.src = "https://diegolp00-ui.github.io/shalom-choferes/";
     showToast("↻ Simulador reiniciado");
   }
 }
